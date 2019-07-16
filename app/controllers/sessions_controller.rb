@@ -6,6 +6,6 @@ class SessionsController < ApplicationController
 
     def show
         session = Session.find(params[:id])
-        render json: OrgSerializer.new(session)
+        render json: SessionSerializer.new(session)
       end
 end
