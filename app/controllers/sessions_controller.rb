@@ -7,5 +7,14 @@ class SessionsController < ApplicationController
     def show
         session = Session.find(params[:id])
         render json: SessionSerializer.new(session)
-      end
+    end
+
+    def create
+      session = Session.create(session_params)
+      render json: session
+  end
+
+  def session_params
+      params.require(:session).permit!
+    end
 end
