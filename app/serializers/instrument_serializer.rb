@@ -1,4 +1,4 @@
 class InstrumentSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :sessions, :users
+  attributes :name, :settings, :sessions, :users
 end
