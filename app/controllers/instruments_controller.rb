@@ -15,11 +15,19 @@ class InstrumentsController < ApplicationController
     end
 
     def update
-      instrument = Instrument.update(instrument_params)
+      instrument = Instrument.find_by(id: params[:id])
+      instrument.update(instrument_params)
       render json: instrument
-  end
-  
+    end
+ 
+    def destroy
+      instrument = instrument.find_by(id: params[:id])
+      instrument.destroy
+    end
+ 
+ 
+    private
     def instrument_params
-        params.require(:instrument).permit!
-      end
+      params.require(:instrument).permit!
+    end
 end

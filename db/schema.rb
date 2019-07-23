@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2019_07_21_010910) do
 
   create_table "instruments", force: :cascade do |t|
     t.string "name"
-    t.string "settings"
+    t.json "settings"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
