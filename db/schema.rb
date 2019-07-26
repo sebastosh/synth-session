@@ -15,6 +15,12 @@ ActiveRecord::Schema.define(version: 2019_07_23_010910) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "chats", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "instruments", force: :cascade do |t|
     t.string "name"
     t.json "settings"
@@ -22,19 +28,13 @@ ActiveRecord::Schema.define(version: 2019_07_23_010910) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "jams", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "messages", force: :cascade do |t|
     t.string "content"
     t.bigint "user_id"
-    t.bigint "jam_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["jam_id"], name: "index_messages_on_jam_id"
+    t.bigint "chat_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -53,6 +53,6 @@ ActiveRecord::Schema.define(version: 2019_07_23_010910) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "messages", "jams"
+  add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
 end

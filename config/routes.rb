@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :sessions
   resources :users
   resources :messages
-	resources :jams
+	resources :chats
 
   post "/login", to: "auth#login"
   post "/signup", to: "users#create"
@@ -12,10 +12,10 @@ Rails.application.routes.draw do
   post "/new-session", to: "sessions#create"
 
 
-	post '/jams/:jam_id/authorize', to: 'jams#open'
-	post '/jams/:jam_id/add_message', to: 'jams#add_message'
-	post '/jams/delete_message', to: 'jams#delete_message'
+	post '/chats/:chat_id/authorize', to: 'chats#open'
+	post '/chats/:chat_id/add_message', to: 'chats#add_message'
+	post '/chats/delete_message', to: 'chats#delete_message'
 
-	mount ActionCable.server => '/cable'
+	mount ActionCable.server, at: '/cable'
 
 end
