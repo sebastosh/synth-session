@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :user_sessions
+  resources :session_instruments
   resources :instruments
   resources :sessions
   resources :users

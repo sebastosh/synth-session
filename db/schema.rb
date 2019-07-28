@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_23_010910) do
+ActiveRecord::Schema.define(version: 2019_07_26_184310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,12 +38,28 @@ ActiveRecord::Schema.define(version: 2019_07_23_010910) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
-  create_table "sessions", force: :cascade do |t|
-    t.string "name"
-    t.integer "user_id"
-    t.integer "instrument_id"
+  create_table "session_instruments", force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.bigint "instrument_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["instrument_id"], name: "index_session_instruments_on_instrument_id"
+    t.index ["session_id"], name: "index_session_instruments_on_session_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_sessions", force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["session_id"], name: "index_user_sessions_on_session_id"
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,4 +71,8 @@ ActiveRecord::Schema.define(version: 2019_07_23_010910) do
 
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
+  add_foreign_key "session_instruments", "instruments"
+  add_foreign_key "session_instruments", "sessions"
+  add_foreign_key "user_sessions", "sessions"
+  add_foreign_key "user_sessions", "users"
 end
