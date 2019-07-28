@@ -1,8 +1,8 @@
 User.create(username: "seb",  password: "123" )
 User.create(username: "moe",  password: "123" )
 
-Instrument.create(name: "Bass Synth")
-Instrument.create(name: "Duo Synth")
+Instrument.create(name: "Bass Synth", instrument_type: "Synth")
+Instrument.create(name: "Duo Synth", instrument_type: "DuoSynth")
 
 Session.create(name: "Drone Rituals")
 Session.create(name: "Noise Story")
