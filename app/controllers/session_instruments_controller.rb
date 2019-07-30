@@ -48,6 +48,6 @@ class SessionInstrumentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def session_instrument_params
-      params.require(:session_instrument).permit(:session_id, :instrument_id)
+      params.require(:session_instrument).permit(:name, :session_id, :instrument_id)
     end
 end

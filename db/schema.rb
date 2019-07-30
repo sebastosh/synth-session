@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2019_07_26_184310) do
   end
 
   create_table "session_instruments", force: :cascade do |t|
+    t.string "name"
     t.bigint "session_id", null: false
     t.bigint "instrument_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -55,6 +56,7 @@ ActiveRecord::Schema.define(version: 2019_07_26_184310) do
   end
 
   create_table "user_sessions", force: :cascade do |t|
+    t.string "name"
     t.bigint "session_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
