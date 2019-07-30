@@ -14,7 +14,20 @@ class SessionsController < ApplicationController
       render json: session
   end
 
+  def update
+    session = Session.find_by(id: params[:id])
+    session.update(session_params)
+    render json: session
+  end
+
+  def destroy
+    session = session.find_by(id: params[:id])
+    session.destroy
+  end
+
+
+  private
   def session_params
-      params.require(:session).permit!
-    end
+    params.require(:session).permit!
+  end
 end
