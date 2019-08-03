@@ -37,8 +37,10 @@ class SessionInstrumentsController < ApplicationController
 
   # DELETE /session_instruments/1
   def destroy
+    session_instrument = SessionInstrument.find_by(id: params[:id])
     session_instrument.destroy
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

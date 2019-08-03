@@ -21,7 +21,7 @@ class InstrumentsController < ApplicationController
     end
  
     def destroy
-      instrument = instrument.find_by(id: params[:id])
+      instrument = Instrument.find_by(id: params[:id])
       instrument.destroy
     end
  
