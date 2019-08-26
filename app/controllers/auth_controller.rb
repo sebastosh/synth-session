@@ -4,11 +4,7 @@ class AuthController < ApplicationController
       is_authenticated = user.authenticate(params[:password])
 
       if is_authenticated
-          # payload = { user_id: user.id }
 
-          # token = JWT.encode payload, 'fortytwo', 'HS256'
-
-          # render json: {token: encode_token(payload)}
           render json: { token: encode_token(user_payload(user)) }
       else
 

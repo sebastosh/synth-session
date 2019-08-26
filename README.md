@@ -1,4 +1,6 @@
-View  client-side repo [here](https://github.com/sebastosh/synthsession-front).
+[View Demo](https://modest-saha-2b5751.netlify.com/)
+
+[View React Frontend Repo](https://github.com/sebastosh/synthsession-front)
 
 # SynthSessions - Back End Server 
 Backend Rails Api for web app designed for multi-synthesizer jamming sessions.  
@@ -45,7 +47,7 @@ A web app designed for multi-synthesizer jamming. Users can create a session and
 
 ## Demo
 
-[View live demo here](#coming-soon)
+[View live demo here](https://modest-saha-2b5751.netlify.com/)
 
 
 
