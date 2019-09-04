@@ -1,6 +1,9 @@
 {
   "name": "synth-sessions",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.9.0"
+  },
   "description": "multi-synthesizer jamming session app",
   "main": "index.js",
   "directories": {
@@ -12,9 +15,9 @@
   },
   "author": "sebastosh",
   "scripts": {
-    "build": "cd client && yarn install && yarn build && cd ..",
+    "build": "cd client && npm install && npm run-script build && cd ..",
     "deploy": "cp -a client/build/. public/",
-    "postinstall": "yarn build && yarn deploy && echo 'Client built!'"
+    "postinstall": "npm run-script build && npm run-script deploy && echo 'Client built!'"
   },
   "bugs": {
     "url": "https://github.com/sebastosh/synth-session/issues"
