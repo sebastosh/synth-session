@@ -1,0 +1,23 @@
+{
+  "name": "synth-sessions",
+  "version": "1.0.0",
+  "description": "multi-synthesizer jamming session app",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "url": "https://github.com/sebastosh/synth-session",
+    "type": "git"
+  },
+  "author": "sebastosh",
+  "scripts": {
+    "build": "cd client && yarn install && yarn build && cd ..",
+    "deploy": "cp -a client/build/. public/",
+    "postinstall": "yarn build && yarn deploy && echo 'Client built!'"
+  },
+  "bugs": {
+    "url": "https://github.com/sebastosh/synth-session/issues"
+  }
+  
+}
