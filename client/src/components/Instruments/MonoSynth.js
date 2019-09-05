@@ -261,7 +261,7 @@ export class MonoSynth extends Component {
       settings: this.state.settings
     };
 
-    fetch(`/instruments/${this.props.synthApi.id}`, {
+    fetch(`http://localhost:3000/instruments/${this.props.synthApi.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -283,7 +283,7 @@ export class MonoSynth extends Component {
   removeSynth = () => {
     this.props.removeSynth(this.props.synthApi.id)
 
-    fetch('/session_instruments/')
+    fetch('http://localhost:3000/session_instruments/')
     .then(response => response.json())
     .then(sessionInstrumentData => {
       console.log('sessionInstrumentData: ', sessionInstrumentData);
@@ -292,11 +292,11 @@ export class MonoSynth extends Component {
             si => si.attributes.instrument_id === this.props.synthApi.id
           );
           thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
+             fetch(`http://localhost:3000/session_instruments/${instrument.id}`, {
         method: 'delete'
     })
     .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
+      fetch(`http://localhost:3000/instruments/${this.props.synthApi.id}`, {
         method: 'delete'
     })
     .then(res => console.log('res: ', res))

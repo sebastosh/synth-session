@@ -6,7 +6,7 @@ import NewInstrumentForm from "../components/NewInstrumentForm";
 import EditSessionForm from "../components/EditSessionForm";
 
 
-// const API = "";
+const API = 'http://localhost:3000';
 
 class Session extends React.Component {
   state = {
@@ -19,7 +19,7 @@ class Session extends React.Component {
   componentDidMount() {
     const SESSION_URL = this.props.match.url;
 
-    fetch(SESSION_URL)
+    fetch(API+SESSION_URL)
       .then(response => response.json())
       .then(session => {
         this.setState({
@@ -50,7 +50,7 @@ class Session extends React.Component {
   updateSessionName = name => {
     const SESSION_URL = this.props.match.url;
 
-    fetch(SESSION_URL, {
+    fetch(API+SESSION_URL, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

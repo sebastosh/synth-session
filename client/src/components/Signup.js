@@ -8,7 +8,7 @@ class Signup extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    fetch('/signup', {
+    fetch('http://localhost:3000/signup', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ class Signup extends React.Component {
         localStorage.setItem("token", parsedResponse.token)
       );
     if (localStorage.token) {
-      fetch('/profile', {
+      fetch('http://localhost:3000/profile', {
         headers: { Authorization: localStorage.token }
       })
         .then(res => res.json())
@@ -51,7 +51,7 @@ class Signup extends React.Component {
         />
 
         <input
-          type="text"
+          type="password"
           value={this.state.password}
           onChange={this.handleChange}
           placeholder="Password"

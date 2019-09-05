@@ -13,7 +13,7 @@ export class NewSessionForm extends Component {
     };
     console.log("newSession: ", newSession);
 
-    fetch('/sessions', {
+    fetch('http://localhost:3000/sessions', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export class NewSessionForm extends Component {
           user_id: this.props.sessionUser.id
         };
         console.log("newUserSession: ", newUserSession);
-        fetch('/user_sessions', {
+        fetch('http://localhost:3000/user_sessions', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
