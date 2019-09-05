@@ -8,7 +8,7 @@ class Signup extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    fetch("/signup", {
+    fetch('/signup', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ class Signup extends React.Component {
         localStorage.setItem("token", parsedResponse.token)
       );
     if (localStorage.token) {
-      fetch("/profile", {
+      fetch('/profile', {
         headers: { Authorization: localStorage.token }
       })
         .then(res => res.json())

@@ -10,7 +10,7 @@ class Profile extends React.Component {
 
   componentDidMount() {
     if (localStorage.token) {
-      fetch("/profile", {
+      fetch('/profile', {
         headers: { Authorization: localStorage.token }
       })
         .then(res => res.json())
@@ -23,7 +23,7 @@ class Profile extends React.Component {
   }
 
   getUser = userData => {
-    fetch("/users")
+    fetch('/users')
       .then(response => response.json())
       .then(usersData => {
         this.setState({ users: usersData.data }, () => {

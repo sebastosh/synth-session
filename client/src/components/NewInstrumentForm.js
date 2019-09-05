@@ -21,7 +21,7 @@ export class NewInstrumentForm extends Component {
   }
 
   componentDidMount() {
-    fetch("/instruments")
+    fetch('/instruments')
       .then(response => response.json())
       .then(instrumentData => {
         this.setState({ instruments: instrumentData.data });
@@ -37,7 +37,7 @@ export class NewInstrumentForm extends Component {
         instrument_type: instrument.value
       };
       console.log("newInstrument: ", newInstrument);
-      fetch("/instruments", {
+      fetch('/instruments', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export class NewInstrumentForm extends Component {
           };
           console.log("newSessionInstrument: ", newSessionInstrument);
 
-          fetch("/session_instruments", {
+          fetch('/session_instruments', {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

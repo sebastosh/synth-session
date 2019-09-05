@@ -21,7 +21,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     if (localStorage.token) {
-      fetch("/profile", {
+      fetch('/profile', {
         headers: { Authorization: localStorage.token }
       })
         .then(res => res.json())
@@ -32,7 +32,7 @@ export default class App extends React.Component {
       console.log("nobody here");
     }
 
-    fetch("/sessions")
+    fetch('/sessions')
       .then(response => response.json())
       .then(sessionsData => {
         this.setState({ sessions: sessionsData.data });
@@ -40,7 +40,7 @@ export default class App extends React.Component {
   }
 
   getUser = userData => {
-    fetch("/users")
+    fetch('/users')
       .then(response => response.json())
       .then(usersData => {
         this.setState({ users: usersData.data }, () => {
