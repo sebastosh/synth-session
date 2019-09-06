@@ -13,14 +13,15 @@
     "url": "https://github.com/sebastosh/synth-session",
     "type": "git"
   },
-  "author": "sebastosh",
+  "bugs": {
+    "url": "https://github.com/sebastosh/synth-session/issues"
+  },
+  "author": "Sebastien Sanz de Santamaria",
+  "license": "MIT",
   "scripts": {
     "build": "cd client && npm install && npm run-script build && cd ..",
     "deploy": "cp -a client/build/. public/",
     "postinstall": "npm run-script build && npm run-script deploy && echo 'Client built!'"
-  },
-  "bugs": {
-    "url": "https://github.com/sebastosh/synth-session/issues"
   }
   
 }

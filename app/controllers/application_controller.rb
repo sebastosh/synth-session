@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   end
 
   def secret
-  Rails.application.credentials.mod4_secret
+  Rails.application.credentials.synth_secret
   end
 
   def token

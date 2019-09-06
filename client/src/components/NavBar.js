@@ -52,7 +52,7 @@ export class NavBar extends Component {
           <div className="navuser">
                        {this.state.help ? (
               <div className="key-ui">
-                <img onClick={this.showHelp} src="/Piano.png" alt="piano keyboard mapping" />
+                <img onClick={this.showHelp} src="/piano-key-map.png" alt="piano keyboard mapping" />
               </div>
             ) : null}
             <span
