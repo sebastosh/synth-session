@@ -1,5 +1,5 @@
 
-[View Demo](https://modest-saha-2b5751.netlify.com/)
+[View Demo](https://still-mountain-88882.herokuapp.com/)
 
 [View React Frontend Repo](https://github.com/sebastosh/synthsession-front)
 
@@ -33,7 +33,7 @@ A web app designed for multi-synthesizer jamming. Users can create a session and
 
 ## Demo
 
-[View Demo](https://modest-saha-2b5751.netlify.com/)
+[View Demo](https://still-mountain-88882.herokuapp.com/)
 
 
 
