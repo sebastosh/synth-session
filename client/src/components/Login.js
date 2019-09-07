@@ -33,7 +33,7 @@ class Login extends React.Component {
             });
         } else {
         
-          console.log("YO! didn't work, try agian");
+          console.log("Sorry, that didn't work");
         }
       });
   };

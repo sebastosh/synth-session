@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import {
-  Dial,
-  Multislider,
-  Select,
-} from "react-nexusui";
+import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
 import KeyBoard from "./Piano/KeyBoard";
@@ -74,10 +70,8 @@ export class DuoSynth extends Component {
     this.onKeyPressed = this.onKeyPressed.bind(this);
     this.onKeyLifted = this.onKeyLifted.bind(this);
     this.handleClickOctave = this.handleClickOctave.bind(this);
-  
+
     // this.sequencer = new Nexus.Sequencer('#sequencer');
-
-
   }
 
   componentDidMount() {
@@ -108,15 +102,14 @@ export class DuoSynth extends Component {
     );
   };
 
-  updateInstrumentName = name => { 
-    this.setState({synthName: name.target.value})
-  }
+  updateInstrumentName = name => {
+    this.setState({ synthName: name.target.value });
+  };
 
   handleGain = e => {
     this.gain.gain.value = e;
   };
   handleOsc1 = e => {
-    console.log('e: ', e.value);
     this.DuoSynth.voice0.oscillator.type = e.value;
 
     this.setState({
@@ -124,10 +117,8 @@ export class DuoSynth extends Component {
         voice0OscillatorType: e.value
       })
     });
-
-  }
+  };
   handleOsc2 = e => {
-    console.log('e: ', e.value);
     this.DuoSynth.voice1.oscillator.type = e.value;
 
     this.setState({
@@ -135,8 +126,7 @@ export class DuoSynth extends Component {
         voice1OscillatorType: e.value
       })
     });
-
-  }
+  };
   handleVibrato = e => {
     this.DuoSynth.vibratoAmount.value = e[0];
     this.DuoSynth.vibratoRate.value = e[1];
@@ -238,7 +228,7 @@ export class DuoSynth extends Component {
       "n",
       "j",
       "m",
-      ",", 
+      ",",
       "."
     ];
 
@@ -247,13 +237,13 @@ export class DuoSynth extends Component {
 
       if (keyNote === ",") {
         this.setState({ octave: this.state.octave - 1 });
-        pressedNote = null
+        pressedNote = null;
       }
       if (keyNote === ".") {
         this.setState({ octave: this.state.octave + 1 });
-        pressedNote = null
+        pressedNote = null;
       }
-      
+
       if (keyNote === "z") {
         pressedNote = "C";
       }
@@ -317,47 +307,36 @@ export class DuoSynth extends Component {
       },
       body: JSON.stringify(synthFromState)
       // body: {"settings": this.state.settings}
-    })
-      .then(res => res.json())
-      .then(synthObject => {
-        console.log("promised synth: ", synthObject);
-        console.log("compared this.props.synthApi: ", this.props.synthApi);
-      });
+    }).then(res => res.json());
   };
 
   removeSynth = () => {
-    this.props.removeSynth(this.props.synthApi.id)
+    this.props.removeSynth(this.props.synthApi.id);
 
-    fetch('/session_instruments/')
-    .then(response => response.json())
-    .then(sessionInstrumentData => {
-      console.log('sessionInstrumentData: ', sessionInstrumentData);
-      let thisSI = sessionInstrumentData.data.filter(
-        
-            si => si.attributes.instrument_id === this.props.synthApi.id
-          );
-          thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
-        method: 'delete'
-    })
-    .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
-        method: 'delete'
-    })
-    .then(res => console.log('res: ', res))
-      
-      console.log('res: ', res)})
-          })
-    });
-      
-};
+    fetch("/session_instruments/")
+      .then(response => response.json())
+      .then(sessionInstrumentData => {
+        let thisSI = sessionInstrumentData.data.filter(
+          si => si.attributes.instrument_id === this.props.synthApi.id
+        );
+        thisSI.map(instrument => {
+          fetch(`/session_instruments/${instrument.id}`, {
+            method: "delete"
+          }).then(res => {
+            fetch(`/instruments/${this.props.synthApi.id}`, {
+              method: "delete"
+            });
+          });
+          return null;
+        });
+      });
+  };
 
   render() {
     return (
       <div>
-      {this.state.instrumentNameToggle ? 
-            <div className="synth-title">
-
+        {this.state.instrumentNameToggle ? (
+          <div className="synth-title">
             <input
               ref="divFocus"
               tabIndex={1}
@@ -368,10 +347,14 @@ export class DuoSynth extends Component {
               onChange={this.updateInstrumentName}
               name="name"
             />
-  
-        </div>: <div onClick={this.instrumentNameToggle} className="synth-title">{this.state.synthName}</div>}
+          </div>
+        ) : (
+          <div onClick={this.instrumentNameToggle} className="synth-title">
+            {this.state.synthName}
+          </div>
+        )}
 
-      <span
+        <span
           role="img"
           aria-label="Save Synth"
           className="save-synth"
@@ -395,19 +378,27 @@ export class DuoSynth extends Component {
           onKeyPress={this.onKeyPressed}
           onKeyUp={this.onKeyLifted}
         >
-           <TitleAndChildren title="Gain">
+          <TitleAndChildren title="Gain">
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
           <TitleAndChildren title="Osc 1">
-            <Select options={["sine","square","sawtooth","triangle"]} value={"sine"} onChange={this.handleOsc1}/>
+            <Select
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc1}
+            />
           </TitleAndChildren>
 
           <TitleAndChildren title="Osc 2">
-            <Select options={["sine","square","sawtooth","triangle"]} value={"sine"} onChange={this.handleOsc2}/>
+            <Select
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc2}
+            />
           </TitleAndChildren>
 
-           <TitleAndChildren title="Vibrato">
+          <TitleAndChildren title="Vibrato">
             <Multislider
               size={[100, 100]}
               numberOfSliders="3"
@@ -423,7 +414,7 @@ export class DuoSynth extends Component {
             />
           </TitleAndChildren>
 
-           <TitleAndChildren title="Filter Env">
+          <TitleAndChildren title="Filter Env">
             <Multislider
               size={[100, 100]}
               numberOfSliders="3"
@@ -438,10 +429,9 @@ export class DuoSynth extends Component {
               ]}
               onChange={this.handleFilter}
             />
-            
           </TitleAndChildren>
 
-           <TitleAndChildren title="Env ADSR">
+          <TitleAndChildren title="Env ADSR">
             <Multislider
               size={[100, 100]}
               numberOfSliders="4"
@@ -463,31 +453,6 @@ export class DuoSynth extends Component {
             onDownKey={this.onDownKey}
             onUpKey={this.onUpKey}
           />
-          {/* <TitleAndChildren title="Sequencer">
-            <Sequencer
-              rows={5}
-              columns={10}
-              size={[400, 200]}
-              onStep={console.warn}
-              onReady={this.sequencer.current = this.sequencer}
-            />
-            <div>
-              <button
-                onClick={() => {
-                  this.sequencer.current.start(500);
-                }}
-              >
-                Play Sequencer
-              </button>
-              <button
-                onClick={() => {
-                  this.sequencer.current.stop(500);
-                }}
-              >
-                Stop Sequencer
-              </button>
-            </div>
-          </TitleAndChildren> */}
         </div>
       </div>
     );

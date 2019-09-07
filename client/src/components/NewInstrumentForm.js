@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, withRouter } from "react-router-dom";
-import InstrumentList from "../containers/InstrumentsList";
+import { withRouter } from "react-router-dom";
 import Select from "react-select";
 
 export class NewInstrumentForm extends Component {
@@ -36,7 +35,7 @@ export class NewInstrumentForm extends Component {
         name: `${this.props.sessionName}-${instrument.label}`,
         instrument_type: instrument.value
       };
-      console.log("newInstrument: ", newInstrument);
+      
       fetch('/instruments', {
         method: "POST",
         headers: {
@@ -47,18 +46,12 @@ export class NewInstrumentForm extends Component {
       })
         .then(res => res.json())
         .then(newInstrumentReturn => {
-          console.log("newInstrumentReturn.id", newInstrumentReturn.id);
-          console.log(
-            "this.props.match.params.sessionsId: ",
-            this.props.match.params.sessionsId
-          );
-
+          
           let newSessionInstrument = {
             name: `${this.props.sessionName}-${instrument.label}`,
             session_id: this.props.match.params.sessionsId,
             instrument_id: newInstrumentReturn.id
           };
-          console.log("newSessionInstrument: ", newSessionInstrument);
 
           fetch('/session_instruments', {
             method: "POST",
@@ -70,20 +63,17 @@ export class NewInstrumentForm extends Component {
           })
             .then(res => res.json())
             .then(newSessionInstrumentReturn => {
-              console.log(
-                "newSessionInstrumentReturn: ",
-                newSessionInstrumentReturn
-              );
+
               this.props.addNewInstrument(newInstrumentReturn);
               this.props.newInstrumentForm()
             });
         });
+        return "cool"
     });
   };
 
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   };
 
   render() {

@@ -29,12 +29,12 @@ export class NavBar extends Component {
       <div className="navbar">
        
         <NavLink to="/">
-          <span role="img" aria-label="sessions">
+          <span role="img" aria-label="sessions" alt="session">
           Synth Sessions 🎛
           </span>
         </NavLink>
         {localStorage.token && !this.state.newClick ? (
-          <span className="newButton" onClick={this.newSessionClick} role="img" aria-label="new session">
+          <span className="newButton" onClick={this.newSessionClick} role="img" aria-label="new session" alt="new session">
             🎹
           </span>
         ) : null}
@@ -60,20 +60,21 @@ export class NavBar extends Component {
               className="help-button"
               role="img"
               aria-label="chat"
+              alt="Help"
             >
               ？
             </span>
             <div className="nav-rotate">
            
               <NavLink onClick={this.resetState} to="/profile">
-                <span role="img" aria-label="profile">
+                <span role="img" aria-label="profile" alt="Profile">
                   ⏀
                 </span>
               </NavLink>
             </div>
             <div className="nav-rotate">
               <NavLink onClick={this.resetState} to="/signout">
-                <span role="img" aria-label="Sign In">
+                <span role="img" aria-label="Sign Out" alt="Sign Out">
                 ⏅
                 </span>
               </NavLink>
@@ -82,13 +83,13 @@ export class NavBar extends Component {
         ) : (
           <div className="navuser">
             <NavLink onClick={this.resetState} to="/login">
-              <span role="img" aria-label="Login">
+              <span role="img" aria-label="Login" alt="Log in">
                 ⏀
               </span>
             </NavLink>
             <div className="nav-rotate">
             <NavLink onClick={this.resetState} to="/signup">
-              <span role="img" aria-label="Sign Up">
+              <span role="img" aria-label="Sign Up" alt="Sign Up">
               ⏄
               </span>
             </NavLink>

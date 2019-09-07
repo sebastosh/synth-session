@@ -11,7 +11,6 @@ export class NewSessionForm extends Component {
     let newSession = {
       name: this.state.name
     };
-    console.log("newSession: ", newSession);
 
     fetch('/sessions', {
       method: "POST",
@@ -23,16 +22,11 @@ export class NewSessionForm extends Component {
     })
       .then(res => res.json())
       .then(newSession => {
-        console.log(newSession);
-   
-        console.log("this.props.sessionUser.id: ", this.props.sessionUser.id);
-        
         const newUserSession = {
           name: `${this.props.sessionUser.attributes.username}-${newSession.name}`,
           session_id: newSession.id,
           user_id: this.props.sessionUser.id
         };
-        console.log("newUserSession: ", newUserSession);
         fetch('/user_sessions', {
           method: "POST",
           headers: {
@@ -43,7 +37,6 @@ export class NewSessionForm extends Component {
         })
           .then(res => res.json())
           .then(newUserSession => {
-            console.log("newusersession return", newUserSession);
             this.props.addSession(newSession);
           });
 

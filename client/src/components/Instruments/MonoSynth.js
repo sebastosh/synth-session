@@ -65,6 +65,9 @@ export class MonoSynth extends Component {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
   }
 
+
+
+
   componentWillReceiveProps(props) {
     this.setState({
       synthType: props.synthApi.instrument_type,
@@ -98,7 +101,7 @@ export class MonoSynth extends Component {
   };
 
   handleOscType = e => {
-    console.log("e: ", e.value);
+   
     this.MonoSynth.oscillator.type = e.value;
 
     this.setState({
@@ -125,7 +128,7 @@ export class MonoSynth extends Component {
   };
 
   handleFilterType = e => {
-    console.log("e: ", e.value);
+  
     this.MonoSynth.filter.type = e.value;
 
     this.setState({
@@ -249,7 +252,7 @@ export class MonoSynth extends Component {
   };
 
   onKeyLifted = e => {
-    console.log("e: ", e.key);
+  
 
     this.MonoSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
@@ -271,8 +274,7 @@ export class MonoSynth extends Component {
     })
       .then(res => res.json())
       .then(synthObject => {
-        console.log("promised synth: ", synthObject);
-        console.log("compared this.props.synthApi: ", this.props.synthApi);
+ 
         this.setState({
           synthType: synthObject.instrument_type,
           synthName: synthObject.name
@@ -286,7 +288,6 @@ export class MonoSynth extends Component {
     fetch('/session_instruments/')
     .then(response => response.json())
     .then(sessionInstrumentData => {
-      console.log('sessionInstrumentData: ', sessionInstrumentData);
       let thisSI = sessionInstrumentData.data.filter(
         
             si => si.attributes.instrument_id === this.props.synthApi.id
@@ -299,17 +300,14 @@ export class MonoSynth extends Component {
       fetch(`/instruments/${this.props.synthApi.id}`, {
         method: 'delete'
     })
-    .then(res => console.log('res: ', res))
-      
-      console.log('res: ', res)})
+   
+      })
+      return null
           })
     });
-      
+   
 };
 
-  consoleUI = e => {
-    console.log("consoleUI", e);
-  };
 
   render() {
     return (

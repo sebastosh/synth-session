@@ -7,8 +7,6 @@ state = {
 }
 
 pickInstrument = e => {
-  console.log('this instrument', e.target.id);
-  console.log('props',this.props.instrument);
   this.setState({clicked:!this.state.clicked})
   !this.state.clicked ? this.props.setInstrument(this.props.instrument) : this.props.removeInstrument(this.props.instrument)
   

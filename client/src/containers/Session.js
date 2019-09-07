@@ -5,7 +5,6 @@ import FMSynth from "../components/Instruments/FMSynth";
 import NewInstrumentForm from "../components/NewInstrumentForm";
 import EditSessionForm from "../components/EditSessionForm";
 
-
 // const API = "";
 
 class Session extends React.Component {
@@ -13,7 +12,7 @@ class Session extends React.Component {
     sessionName: "",
     sessionInstruments: [],
     addNew: false,
-    editSessionName: false,
+    editSessionName: false
   };
 
   componentDidMount() {
@@ -36,14 +35,12 @@ class Session extends React.Component {
   };
 
   addNewInstrument = instrument => {
-    console.log("instrument: ", instrument);
     this.setState({
       sessionInstruments: [instrument, ...this.state.sessionInstruments]
     });
   };
 
   editSessionName = e => {
-    console.log("e: ", e.target.value);
     this.setState({ editSessionName: !this.state.editSessionName });
   };
 
@@ -67,13 +64,10 @@ class Session extends React.Component {
       });
   };
 
-
   removeSynth = synthId => {
-    console.log("remove synth: ", synthId);
     const newInstrumentsArray = this.state.sessionInstruments.filter(
       instrument => instrument.id !== synthId
     );
-    console.log("newInstrumentsArray: ", newInstrumentsArray);
     this.setState({
       sessionInstruments: newInstrumentsArray
     });
@@ -99,7 +93,13 @@ class Session extends React.Component {
             />
           );
         case "FMSynth":
-          return <FMSynth key={instrument.id} synthApi={instrument} removeSynth={this.removeSynth} />;
+          return (
+            <FMSynth
+              key={instrument.id}
+              synthApi={instrument}
+              removeSynth={this.removeSynth}
+            />
+          );
         default:
           return null;
       }
@@ -118,10 +118,8 @@ class Session extends React.Component {
           <div>
             <h1 onClick={this.editSessionName}>{this.state.sessionName}</h1>
             <div className="add-synth" onClick={this.newInstrumentForm}>
-            + Add Synth
+              + Add Synth
             </div>
-           
-
           </div>
         )}
 

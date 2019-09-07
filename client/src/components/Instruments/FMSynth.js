@@ -105,7 +105,7 @@ export class FMSynth extends Component {
   };
 
   handleHarmonicity = e => {
-    console.log('e: ', e);
+
     this.FMSynth.harmonicity.value = e;
 
     this.setState({
@@ -128,7 +128,6 @@ handleModulationIndex = e => {
 
 
   handleOsc1 = e => {
-    console.log('e: ', e.value);
     this.FMSynth.oscillator.type = e.value;
 
     this.setState({
@@ -139,7 +138,6 @@ handleModulationIndex = e => {
 
   }
   handleOsc2 = e => {
-    console.log('e: ', e.value);
     this.FMSynth.modulation.type = e.value;
 
     this.setState({
@@ -303,10 +301,7 @@ handleModulationIndex = e => {
       // body: {"settings": this.state.settings}
     })
       .then(res => res.json())
-      .then(synthObject => {
-        console.log("promised synth: ", synthObject);
-        console.log("compared this.props.synthApi: ", this.props.synthApi);
-      });
+
   };
 
   removeSynth = () => {
@@ -315,7 +310,6 @@ handleModulationIndex = e => {
     fetch('/session_instruments/')
     .then(response => response.json())
     .then(sessionInstrumentData => {
-      console.log('sessionInstrumentData: ', sessionInstrumentData);
       let thisSI = sessionInstrumentData.data.filter(
         
             si => si.attributes.instrument_id === this.props.synthApi.id
@@ -328,9 +322,8 @@ handleModulationIndex = e => {
       fetch(`/instruments/${this.props.synthApi.id}`, {
         method: 'delete'
     })
-    .then(res => console.log('res: ', res))
-      
-      console.log('res: ', res)})
+   })
+      return "cool"
           })
     });
       
@@ -439,31 +432,7 @@ handleModulationIndex = e => {
             onDownKey={this.onDownKey}
             onUpKey={this.onUpKey}
           />
-          {/* <TitleAndChildren title="Sequencer">
-            <Sequencer
-              rows={5}
-              columns={10}
-              size={[400, 200]}
-              onStep={console.warn}
-              onReady={this.sequencer.current = this.sequencer}
-            />
-            <div>
-              <button
-                onClick={() => {
-                  this.sequencer.current.start(500);
-                }}
-              >
-                Play Sequencer
-              </button>
-              <button
-                onClick={() => {
-                  this.sequencer.current.stop(500);
-                }}
-              >
-                Stop Sequencer
-              </button>
-            </div>
-          </TitleAndChildren> */}
+
         </div>
       </div>
     );

@@ -59,10 +59,7 @@ export class StepSequencer extends Component {
       // body: {"settings": this.state.settings}
     })
       .then(res => res.json())
-      .then(synthObject => {
-        console.log("promised synth: ", synthObject);
-        console.log("compared this.props.synthApi: ", this.props.synthApi);
-      });
+
   };
 
 
@@ -73,7 +70,6 @@ export class StepSequencer extends Component {
     fetch('/session_instruments/')
     .then(response => response.json())
     .then(sessionInstrumentData => {
-      console.log('sessionInstrumentData: ', sessionInstrumentData);
       let thisSI = sessionInstrumentData.data.filter(
         
             si => si.attributes.instrument_id === this.props.synthApi.id
@@ -86,9 +82,9 @@ export class StepSequencer extends Component {
       fetch(`/instruments/${this.props.synthApi.id}`, {
         method: 'delete'
     })
-    .then(res => console.log('res: ', res))
+    
       
-      console.log('res: ', res)})
+     })
           })
     });
       

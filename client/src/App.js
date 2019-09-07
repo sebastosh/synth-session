@@ -66,7 +66,6 @@ export default class App extends React.Component {
   };
 
   addSession = session => {
-    console.log("New session", session);
     this.setState({
       currentUserSessions: [...this.state.currentUserSessions, session]
     });
