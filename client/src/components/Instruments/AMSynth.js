@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
+
 import ReactDOM from "react-dom";
 import KeyBoard from "./Piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
@@ -14,7 +15,7 @@ function TitleAndChildren({ children, title }) {
   );
 }
 
-export class DuoSynth extends Component {
+export class FMSynth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,42 +26,30 @@ export class DuoSynth extends Component {
       synthName: "",
       synthType: "",
       settings: {
-        vibratoAmount: 0.5,
-        vibratoRate: 5,
         harmonicity: 1.5,
-        voice0Volume: -10,
-        voice0Portamento: 0,
-        voice0OscillatorType: "sine",
-        voice0FilterEnvelopeAttack: 0.01,
-        voice0FilterEnvelopeDecay: 0,
-        voice0FilterEnvelopeSustain: 1,
-        voice0FilterEnvelopeRelease: 0.5,
-        voice0EnvelopeAttack: 0.01,
-        voice0EnvelopeDecay: 0,
-        voice0EnvelopeSustain: 1,
-        voice0EnvelopeRelease: 0.5,
-        voice1Volume: -10,
-        voice1Portamento: 0,
-        voice1OscillatorType: "sine",
-        voice1FilterEnvelopeAttack: 0.01,
-        voice1FilterEnvelopeDecay: 0,
-        voice1FilterEnvelopeSustain: 1,
-        voice1FilterEnvelopeRelease: 0.5,
-        voice1EnvelopeAttack: 0.01,
-        voice1EnvelopeDecay: 0,
-        voice1EnvelopeSustain: 1,
-        voice1EnvelopeRelease: 0.5
+        modulationIndex: 0,
+        oscillatorType: "sine",
+        modulationType: "sine",
+        modulationEnvelopeAttack: 0.01,
+        modulationEnvelopeDecay: 0,
+        modulationEnvelopeSustain: 1,
+        modulationEnvelopeRelease: 0.5,
+        envelopeAttack: 0.01,
+        envelopeDecay: 0,
+        envelopeSustain: 1,
+        envelopeRelease: 0.5
       }
     };
 
     this.gain = new Tone.Gain(0.1).toMaster();
-    this.DuoSynth = new Tone.DuoSynth().connect(this.gain);
+    this.FMSynth = new Tone.FMSynth().connect(this.gain);
 
     // bindings
     this.handleGain = this.handleGain.bind(this);
     this.handleOsc1 = this.handleOsc1.bind(this);
     this.handleOsc2 = this.handleOsc2.bind(this);
-    this.handleVibrato = this.handleVibrato.bind(this);
+    this.handleHarmonicity = this.handleHarmonicity.bind(this);
+    this.handleModulationIndex = this.handleModulationIndex.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.handleEnvelope = this.handleEnvelope.bind(this);
 
@@ -76,15 +65,18 @@ export class DuoSynth extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-    console.log("props: ", this.props);
+  }
+
+  componentWillReceiveProps(props) {
+    console.log("props: ", props);
     this.setState({
-      synthType: this.props.synthApi.instrument_type,
-      synthName: this.props.synthApi.name
+      synthType: props.synthApi.instrument_type,
+      synthName: props.synthApi.name
     });
 
-    if (this.props.synthApi.settings !== null) {
+    if (props.synthApi.settings !== null) {
       this.setState({
-        settings: this.props.synthApi.settings
+        settings: props.synthApi.settings
       });
     }
   }
@@ -100,94 +92,83 @@ export class DuoSynth extends Component {
     );
   };
 
-
   updateInstrumentName = name => {
     console.log("name: ", name);
     this.setState({ synthName: name });
-    this.instrumentNameToggle();  };
-
+    this.instrumentNameToggle();
+  };
 
   handleGain = e => {
     this.gain.gain.value = e;
   };
-  handleOsc1 = e => {
-    this.DuoSynth.voice0.oscillator.type = e.value;
+
+  handleHarmonicity = e => {
+    this.FMSynth.harmonicity.value = e;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        voice0OscillatorType: e.value
+        harmonicity: e
+      })
+    });
+  };
+
+  handleModulationIndex = e => {
+    this.FMSynth.modulationIndex.value = e;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        modulationIndex: e
+      })
+    });
+  };
+
+  handleOsc1 = e => {
+    this.FMSynth.oscillator.type = e.value;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        oscillatorType: e.value
       })
     });
   };
   handleOsc2 = e => {
-    this.DuoSynth.voice1.oscillator.type = e.value;
+    this.FMSynth.modulation.type = e.value;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        voice1OscillatorType: e.value
-      })
-    });
-  };
-  handleVibrato = e => {
-    this.DuoSynth.vibratoAmount.value = e[0];
-    this.DuoSynth.vibratoRate.value = e[1];
-    this.DuoSynth.harmonicity.value = e[2];
-
-    this.setState({
-      settings: Object.assign({}, this.state.settings, {
-        vibratoAmount: e[0],
-        vibratoRate: e[1],
-        harmonicity: e[2]
+        modulationType: e.value
       })
     });
   };
 
   handleFilter = e => {
-    this.DuoSynth.voice0.filterEnvelope.attack = e[0];
-    this.DuoSynth.voice0.filterEnvelope.decay = e[1];
-    this.DuoSynth.voice0.filterEnvelope.sustain = e[2];
-    this.DuoSynth.voice0.filterEnvelope.release = e[3];
-
-    this.DuoSynth.voice1.filterEnvelope.attack = e[0];
-    this.DuoSynth.voice1.filterEnvelope.decay = e[1];
-    this.DuoSynth.voice1.filterEnvelope.sustain = e[2];
-    this.DuoSynth.voice1.filterEnvelope.release = e[3];
+    this.FMSynth.modulationEnvelope.attack = e[0];
+    this.FMSynth.modulationEnvelope.decay = e[1];
+    this.FMSynth.modulationEnvelope.sustain = e[2];
+    this.FMSynth.modulationEnvelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        voice0FilterEnvelopeAttack: e[0],
-        voice0FilterEnvelopeDecay: e[1],
-        voice0FilterEnvelopeSustain: e[2],
-        voice0FilterEnvelopeRelease: e[3],
-        voice1FilterEnvelopeAttack: e[0],
-        voice1FilterEnvelopeDecay: e[1],
-        voice1FilterEnvelopeSustain: e[2],
-        voice1FilterEnvelopeRelease: e[3]
+        modulationEnvelopeAttack: e[0],
+        modulationEnvelopeDecay: e[1],
+        modulationEnvelopeSustain: e[2],
+        modulationEnvelopeRelease: e[3]
       })
     });
   };
 
   handleEnvelope = e => {
-    this.DuoSynth.voice0.envelope.attack = e[0];
-    this.DuoSynth.voice0.envelope.decay = e[1];
-    this.DuoSynth.voice0.envelope.sustain = e[2];
-    this.DuoSynth.voice0.envelope.release = e[3];
-
-    this.DuoSynth.voice1.envelope.attack = e[0];
-    this.DuoSynth.voice1.envelope.decay = e[1];
-    this.DuoSynth.voice1.envelope.sustain = e[2];
-    this.DuoSynth.voice1.envelope.release = e[3];
+    this.FMSynth.envelope.attack = e[0];
+    this.FMSynth.envelope.decay = e[1];
+    this.FMSynth.envelope.sustain = e[2];
+    this.FMSynth.envelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        voice0EnvelopeAttack: e[0],
-        voice0EnvelopeDecay: e[1],
-        voice0EnvelopeSustain: e[2],
-        voice0EnvelopeRelease: e[3],
-        voice1EnvelopeAttack: e[0],
-        voice1EnvelopeDecay: e[1],
-        voice1EnvelopeSustain: e[2],
-        voice1EnvelopeRelease: e[3]
+        envelopeAttack: e[0],
+        envelopeDecay: e[1],
+        envelopeSustain: e[2],
+        envelopeRelease: e[3]
       })
     });
   };
@@ -207,11 +188,11 @@ export class DuoSynth extends Component {
   }
 
   onDownKey(note) {
-    this.DuoSynth.triggerAttack(note);
+    this.FMSynth.triggerAttack(note);
   }
 
   onUpKey(note) {
-    this.DuoSynth.triggerRelease();
+    this.FMSynth.triggerRelease();
   }
 
   onKeyPressed = e => {
@@ -283,14 +264,14 @@ export class DuoSynth extends Component {
       }
 
       if (!this.state.firstPressed && keyNote !== "," && keyNote !== ".") {
-        this.DuoSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
+        this.FMSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
         this.setState({ firstPressed: !this.state.firstPressed });
       }
     }
   };
 
   onKeyLifted = e => {
-    this.DuoSynth.triggerRelease();
+    this.FMSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
   };
 
@@ -328,7 +309,7 @@ export class DuoSynth extends Component {
               method: "delete"
             });
           });
-          return null;
+          return "cool";
         });
       });
   };
@@ -338,15 +319,15 @@ export class DuoSynth extends Component {
       <div>
         {this.state.instrumentNameToggle ? (
           <div className="synth-title">
-             <EditInstrumentForm
+            <EditInstrumentForm
               updateInstrumentName={this.updateInstrumentName}
               instrumentNameToggle={this.instrumentNameToggle}
-              name={this.state.synthName}
+              name={this.props.synthApi.name}
             />
           </div>
         ) : (
           <div onClick={this.instrumentNameToggle} className="synth-title">
-            {this.state.synthName}
+            {this.props.synthApi.name}
           </div>
         )}
 
@@ -368,7 +349,7 @@ export class DuoSynth extends Component {
         </span>
 
         <div
-          className="duo-synth"
+          className="fm-synth"
           tabIndex={1}
           ref="divFocus"
           onKeyPress={this.onKeyPressed}
@@ -378,7 +359,20 @@ export class DuoSynth extends Component {
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Osc 1">
+          <TitleAndChildren title="Harmonicity">
+            <Dial value="2" max="4" onChange={this.handleHarmonicity} />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Mod Index">
+            <Dial
+              value="10"
+              min="0"
+              max="40"
+              onChange={this.handleModulationIndex}
+            />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Osc">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
@@ -386,27 +380,11 @@ export class DuoSynth extends Component {
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Osc 2">
+          <TitleAndChildren title="Mod">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
               onChange={this.handleOsc2}
-            />
-          </TitleAndChildren>
-
-          <TitleAndChildren title="Vibrato">
-            <Multislider
-              size={[100, 100]}
-              numberOfSliders="3"
-              min="0"
-              max="10"
-              candycane="3"
-              values={[
-                this.state.settings.vibratoAmount,
-                this.state.settings.vibratoRate,
-                this.state.settings.harmonicity
-              ]}
-              onChange={this.handleVibrato}
             />
           </TitleAndChildren>
 
@@ -418,10 +396,10 @@ export class DuoSynth extends Component {
               max="10"
               candycane="3"
               values={[
-                this.state.settings.voice0FilterEnvelopeAttack,
-                this.state.settings.voice0FilterEnvelopeDecay,
-                this.state.settings.voice0FilterEnvelopeSustain,
-                this.state.settings.voice0FilterEnvelopeRelease
+                this.state.settings.modulationEnvelopeAttack,
+                this.state.settings.modulationEnvelopeDecay,
+                this.state.settings.modulationEnvelopeSustain,
+                this.state.settings.modulationEnvelopeRelease
               ]}
               onChange={this.handleFilter}
             />
@@ -435,10 +413,10 @@ export class DuoSynth extends Component {
               max="10"
               candycane="4"
               values={[
-                this.state.settings.voice0EnvelopeAttack,
-                this.state.settings.voice0EnvelopeDecay,
-                this.state.settings.voice0EnvelopeSustain,
-                this.state.settings.voice0EnvelopeRelease
+                this.state.settings.envelopeAttack,
+                this.state.settings.envelopeDecay,
+                this.state.settings.envelopeSustain,
+                this.state.settings.envelopeRelease
               ]}
               onChange={this.handleEnvelope}
             />
@@ -455,4 +433,4 @@ export class DuoSynth extends Component {
   }
 }
 
-export default DuoSynth;
+export default FMSynth;

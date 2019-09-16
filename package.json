@@ -21,6 +21,7 @@
   },
   "bugs": {
     "url": "https://github.com/sebastosh/synth-session/issues"
-  }
+  },
+  "license": "MIT"
   
 }

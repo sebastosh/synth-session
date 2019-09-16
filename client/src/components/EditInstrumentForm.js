@@ -7,7 +7,9 @@ export class EditSessionForm extends Component {
   };
 
   componentDidMount() {
+    
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
+    this.setState({name:this.props.name})
   }
 
   handleSubmit = e => {
@@ -23,17 +25,19 @@ export class EditSessionForm extends Component {
     return (
       <div className="synth-title">
 
-          <input
+       <form className="edit-session-form" onSubmit={this.handleSubmit}>
+       <input
             ref="divFocus"
             tabIndex={1}
             type="text"
             value={this.state.name}
             placeholder={this.props.name}
             onBlur={this.props.instrumentNameToggle}
-            onChange={this.props.updateInstrumentName}
+            onChange={this.handleChange}
             name="name"
           />
 
+       </form>
       </div>
     );
   }

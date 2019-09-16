@@ -8,6 +8,7 @@ export class EditSessionForm extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
+    this.setState({name:this.props.sessionName})
   }
 
   handleSubmit = e => {

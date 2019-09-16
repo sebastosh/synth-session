@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import {
-  Dial,
-  Multislider,
-  Select,
-} from "react-nexusui";
+import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
 import KeyBoard from "./Piano/KeyBoard";
+import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
@@ -62,25 +59,21 @@ export class FMSynth extends Component {
     this.onKeyPressed = this.onKeyPressed.bind(this);
     this.onKeyLifted = this.onKeyLifted.bind(this);
     this.handleClickOctave = this.handleClickOctave.bind(this);
-  
+
     // this.sequencer = new Nexus.Sequencer('#sequencer');
-
-
   }
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-  }
-
-  componentWillReceiveProps(props) {
+    console.log("props: ", this.props);
     this.setState({
-      synthType: props.synthApi.instrument_type,
-      synthName: props.synthApi.name
+      synthType: this.props.synthApi.instrument_type,
+      synthName: this.props.synthApi.name
     });
 
-    if (props.synthApi.settings !== null) {
+    if (this.props.synthApi.settings !== null) {
       this.setState({
-        settings: props.synthApi.settings
+        settings: this.props.synthApi.settings
       });
     }
   }
@@ -96,36 +89,35 @@ export class FMSynth extends Component {
     );
   };
 
-  updateInstrumentName = name => { 
-    this.setState({synthName: name.target.value})
-  }
+  updateInstrumentName = name => {
+    console.log("name: ", name);
+    this.setState({ synthName: name });
+    this.instrumentNameToggle();
+  };
 
   handleGain = e => {
     this.gain.gain.value = e;
   };
 
   handleHarmonicity = e => {
-
     this.FMSynth.harmonicity.value = e;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
         harmonicity: e
       })
-  })
-}
+    });
+  };
 
-handleModulationIndex = e => {
-  this.FMSynth.modulationIndex.value = e;
+  handleModulationIndex = e => {
+    this.FMSynth.modulationIndex.value = e;
 
-  this.setState({
-    settings: Object.assign({}, this.state.settings, {
-      modulationIndex: e
-    })
-})
-}
-
-
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        modulationIndex: e
+      })
+    });
+  };
 
   handleOsc1 = e => {
     this.FMSynth.oscillator.type = e.value;
@@ -135,8 +127,7 @@ handleModulationIndex = e => {
         oscillatorType: e.value
       })
     });
-
-  }
+  };
   handleOsc2 = e => {
     this.FMSynth.modulation.type = e.value;
 
@@ -145,11 +136,9 @@ handleModulationIndex = e => {
         modulationType: e.value
       })
     });
-
-  }
+  };
 
   handleFilter = e => {
-
     this.FMSynth.modulationEnvelope.attack = e[0];
     this.FMSynth.modulationEnvelope.decay = e[1];
     this.FMSynth.modulationEnvelope.sustain = e[2];
@@ -160,8 +149,7 @@ handleModulationIndex = e => {
         modulationEnvelopeAttack: e[0],
         modulationEnvelopeDecay: e[1],
         modulationEnvelopeSustain: e[2],
-        modulationEnvelopeRelease: e[3],
-
+        modulationEnvelopeRelease: e[3]
       })
     });
   };
@@ -177,8 +165,7 @@ handleModulationIndex = e => {
         envelopeAttack: e[0],
         envelopeDecay: e[1],
         envelopeSustain: e[2],
-        envelopeRelease: e[3],
-        
+        envelopeRelease: e[3]
       })
     });
   };
@@ -220,7 +207,7 @@ handleModulationIndex = e => {
       "n",
       "j",
       "m",
-      ",", 
+      ",",
       "."
     ];
 
@@ -229,13 +216,13 @@ handleModulationIndex = e => {
 
       if (keyNote === ",") {
         this.setState({ octave: this.state.octave - 1 });
-        pressedNote = null
+        pressedNote = null;
       }
       if (keyNote === ".") {
         this.setState({ octave: this.state.octave + 1 });
-        pressedNote = null
+        pressedNote = null;
       }
-      
+
       if (keyNote === "z") {
         pressedNote = "C";
       }
@@ -298,57 +285,50 @@ handleModulationIndex = e => {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-      // body: {"settings": this.state.settings}
-    })
-      .then(res => res.json())
 
+    }).then(res => res.json());
   };
 
   removeSynth = () => {
-    this.props.removeSynth(this.props.synthApi.id)
+    this.props.removeSynth(this.props.synthApi.id);
 
-    fetch('/session_instruments/')
-    .then(response => response.json())
-    .then(sessionInstrumentData => {
-      let thisSI = sessionInstrumentData.data.filter(
-        
-            si => si.attributes.instrument_id === this.props.synthApi.id
-          );
-          thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
-        method: 'delete'
-    })
-    .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
-        method: 'delete'
-    })
-   })
-      return "cool"
-          })
-    });
-      
-};
+    fetch("/session_instruments/")
+      .then(response => response.json())
+      .then(sessionInstrumentData => {
+        let thisSI = sessionInstrumentData.data.filter(
+          si => si.attributes.instrument_id === this.props.synthApi.id
+        );
+        thisSI.map(instrument => {
+          fetch(`/session_instruments/${instrument.id}`, {
+            method: "delete"
+          }).then(res => {
+            fetch(`/instruments/${this.props.synthApi.id}`, {
+              method: "delete"
+            });
+          });
+          return "cool";
+        });
+      });
+  };
 
   render() {
     return (
       <div>
-      {this.state.instrumentNameToggle ? 
-            <div className="synth-title">
-
-            <input
-              ref="divFocus"
-              tabIndex={1}
-              type="text"
-              value={this.state.name}
-              placeholder={this.state.synthName}
-              onBlur={this.instrumentNameToggle}
-              onChange={this.updateInstrumentName}
-              name="name"
+        {this.state.instrumentNameToggle ? (
+          <div className="synth-title">
+            <EditInstrumentForm
+              updateInstrumentName={this.updateInstrumentName}
+              instrumentNameToggle={this.instrumentNameToggle}
+              name={this.state.synthName}
             />
-  
-        </div>: <div onClick={this.instrumentNameToggle} className="synth-title">{this.state.synthName}</div>}
+          </div>
+        ) : (
+          <div onClick={this.instrumentNameToggle} className="synth-title">
+            {this.state.synthName}
+          </div>
+        )}
 
-      <span
+        <span
           role="img"
           aria-label="Save Synth"
           className="save-synth"
@@ -372,7 +352,7 @@ handleModulationIndex = e => {
           onKeyPress={this.onKeyPressed}
           onKeyUp={this.onKeyLifted}
         >
-           <TitleAndChildren title="Gain">
+          <TitleAndChildren title="Gain">
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
@@ -381,15 +361,28 @@ handleModulationIndex = e => {
           </TitleAndChildren>
 
           <TitleAndChildren title="Mod Index">
-            <Dial value="10" min="0" max="40" onChange={this.handleModulationIndex} />
+            <Dial
+              value="10"
+              min="0"
+              max="40"
+              onChange={this.handleModulationIndex}
+            />
           </TitleAndChildren>
 
           <TitleAndChildren title="Osc">
-            <Select options={["sine","square","sawtooth","triangle"]} value={"sine"} onChange={this.handleOsc1}/>
+            <Select
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc1}
+            />
           </TitleAndChildren>
 
           <TitleAndChildren title="Mod">
-            <Select options={["sine","square","sawtooth","triangle"]} value={"sine"} onChange={this.handleOsc2}/>
+            <Select
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc2}
+            />
           </TitleAndChildren>
 
           <TitleAndChildren title="Filter Env">
@@ -407,10 +400,9 @@ handleModulationIndex = e => {
               ]}
               onChange={this.handleFilter}
             />
-            
           </TitleAndChildren>
 
-           <TitleAndChildren title="Env ADSR">
+          <TitleAndChildren title="Env ADSR">
             <Multislider
               size={[100, 100]}
               numberOfSliders="4"
@@ -432,7 +424,6 @@ handleModulationIndex = e => {
             onDownKey={this.onDownKey}
             onUpKey={this.onUpKey}
           />
-
         </div>
       </div>
     );

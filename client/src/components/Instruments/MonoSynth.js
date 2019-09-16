@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import Tone from "tone";
-import {
-  Dial,
-  Multislider,
-  Select,
-} from "react-nexusui";
+import { Dial, Multislider, Select } from "react-nexusui";
 import ReactDOM from "react-dom";
 import KeyBoard from "./Piano/KeyBoard";
+import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
@@ -16,8 +13,6 @@ function TitleAndChildren({ children, title }) {
     </div>
   );
 }
-
-
 
 export class MonoSynth extends Component {
   constructor(props) {
@@ -63,23 +58,19 @@ export class MonoSynth extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-  }
-
-
-
-
-  componentWillReceiveProps(props) {
+    console.log("props: ", this.props);
     this.setState({
-      synthType: props.synthApi.instrument_type,
-      synthName: props.synthApi.name
+      synthType: this.props.synthApi.instrument_type,
+      synthName: this.props.synthApi.name
     });
 
-    if (props.synthApi.settings !== null) {
+    if (this.props.synthApi.settings !== null) {
       this.setState({
-        settings: props.synthApi.settings
+        settings: this.props.synthApi.settings
       });
     }
   }
+
 
   instrumentNameToggle = e => {
     this.setState(
@@ -93,8 +84,9 @@ export class MonoSynth extends Component {
   };
 
   updateInstrumentName = name => {
-    this.setState({ synthName: name.target.value });
-  };
+    console.log("name: ", name);
+    this.setState({ synthName: name });
+    this.instrumentNameToggle();  };
 
   handleGain = e => {
     this.gain.gain.value = e;
@@ -273,13 +265,7 @@ export class MonoSynth extends Component {
       body: JSON.stringify(synthFromState)
     })
       .then(res => res.json())
-      .then(synthObject => {
- 
-        this.setState({
-          synthType: synthObject.instrument_type,
-          synthName: synthObject.name
-        });
-      });
+   
   };
 
   removeSynth = () => {
@@ -314,13 +300,10 @@ export class MonoSynth extends Component {
       <div>
         {this.state.instrumentNameToggle ? (
           <div className="synth-title">
-            <input
-              type="text"
-              value={this.state.name}
-              placeholder={this.state.synthName}
-              onBlur={this.instrumentNameToggle}
-              onChange={this.updateInstrumentName}
-              name="name"
+             <EditInstrumentForm
+              updateInstrumentName={this.updateInstrumentName}
+              instrumentNameToggle={this.instrumentNameToggle}
+              name={this.state.synthName}
             />
           </div>
         ) : (
