@@ -2,7 +2,8 @@
   "name": "synth-sessions",
   "version": "1.0.0",
   "engines": {
-    "node": "11.14.0"
+    "node": "11.14.0",
+    "npm": "6.7.0"
   },
   "description": "multi-synthesizer jamming session app",
   "main": "index.js",
