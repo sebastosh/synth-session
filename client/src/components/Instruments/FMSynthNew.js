@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
+
 import ReactDOM from "react-dom";
 import KeyBoard from "./piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
@@ -8,13 +9,14 @@ import EditInstrumentForm from "../EditInstrumentForm";
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h5 className={"subtitle"}>{title}</h5>
+      
       {children}
+      <h5 className={"subtitle"}>{title}</h5>
     </div>
   );
 }
 
-export class MonoSynth extends Component {
+export class FMSynth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,28 +27,32 @@ export class MonoSynth extends Component {
       synthName: "",
       synthType: "",
       settings: {
-        frequency: "C4",
-        detune: 0,
+        harmonicity: 1.5,
+        modulationIndex: 0,
         oscillatorType: "sine",
-        envelopeAttack: 0.001,
-        envelopeDecay: 0.1,
-        envelopeSustain: 0.9,
-        envelopeRelease: 1,
-        filterEnvelopeAttack: 0.06,
-        filterEnvelopeDecay: 0.2,
-        filterEnvelopeSustain: 0.5,
-        filterEnvelopeRelease: 1
+        modulationType: "sine",
+        modulationEnvelopeAttack: 0.01,
+        modulationEnvelopeDecay: 0,
+        modulationEnvelopeSustain: 1,
+        modulationEnvelopeRelease: 0.5,
+        envelopeAttack: 0.01,
+        envelopeDecay: 0,
+        envelopeSustain: 1,
+        envelopeRelease: 0.5
       }
     };
 
     this.gain = new Tone.Gain(0.1).toMaster();
-    this.MonoSynth = new Tone.MonoSynth().connect(this.gain);
+    this.FMSynth = new Tone.FMSynth().connect(this.gain);
 
     // bindings
     this.handleGain = this.handleGain.bind(this);
-    this.handleOscType = this.handleOscType.bind(this);
+    this.handleOsc1 = this.handleOsc1.bind(this);
+    this.handleOsc2 = this.handleOsc2.bind(this);
+    this.handleHarmonicity = this.handleHarmonicity.bind(this);
+    this.handleModulationIndex = this.handleModulationIndex.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
     this.handleEnvelope = this.handleEnvelope.bind(this);
-    this.handleFilterEnvelope = this.handleFilterEnvelope.bind(this);
 
     this.onDownKey = this.onDownKey.bind(this);
     this.onUpKey = this.onUpKey.bind(this);
@@ -54,6 +60,8 @@ export class MonoSynth extends Component {
     this.onKeyPressed = this.onKeyPressed.bind(this);
     this.onKeyLifted = this.onKeyLifted.bind(this);
     this.handleClickOctave = this.handleClickOctave.bind(this);
+
+    // this.sequencer = new Nexus.Sequencer('#sequencer');
   }
 
   componentDidMount() {
@@ -71,7 +79,6 @@ export class MonoSynth extends Component {
     }
   }
 
-
   instrumentNameToggle = e => {
     this.setState(
       { instrumentNameToggle: !this.state.instrumentNameToggle },
@@ -86,15 +93,35 @@ export class MonoSynth extends Component {
   updateInstrumentName = name => {
     console.log("name: ", name);
     this.setState({ synthName: name });
-    this.instrumentNameToggle();  };
+    this.instrumentNameToggle();
+  };
 
   handleGain = e => {
     this.gain.gain.value = e;
   };
 
-  handleOscType = e => {
-   
-    this.MonoSynth.oscillator.type = e.value;
+  handleHarmonicity = e => {
+    this.FMSynth.harmonicity.value = e;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        harmonicity: e
+      })
+    });
+  };
+
+  handleModulationIndex = e => {
+    this.FMSynth.modulationIndex.value = e;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        modulationIndex: e
+      })
+    });
+  };
+
+  handleOsc1 = e => {
+    this.FMSynth.oscillator.type = e.value;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -102,12 +129,37 @@ export class MonoSynth extends Component {
       })
     });
   };
+  handleOsc2 = e => {
+    this.FMSynth.modulation.type = e.value;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        modulationType: e.value
+      })
+    });
+  };
+
+  handleFilter = e => {
+    this.FMSynth.modulationEnvelope.attack = e[0];
+    this.FMSynth.modulationEnvelope.decay = e[1];
+    this.FMSynth.modulationEnvelope.sustain = e[2];
+    this.FMSynth.modulationEnvelope.release = e[3];
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        modulationEnvelopeAttack: e[0],
+        modulationEnvelopeDecay: e[1],
+        modulationEnvelopeSustain: e[2],
+        modulationEnvelopeRelease: e[3]
+      })
+    });
+  };
 
   handleEnvelope = e => {
-    this.MonoSynth.envelope.attack = e[0];
-    this.MonoSynth.envelope.decay = e[1];
-    this.MonoSynth.envelope.sustain = e[2];
-    this.MonoSynth.envelope.release = e[3];
+    this.FMSynth.envelope.attack = e[0];
+    this.FMSynth.envelope.decay = e[1];
+    this.FMSynth.envelope.sustain = e[2];
+    this.FMSynth.envelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -115,33 +167,6 @@ export class MonoSynth extends Component {
         envelopeDecay: e[1],
         envelopeSustain: e[2],
         envelopeRelease: e[3]
-      })
-    });
-  };
-
-  handleFilterType = e => {
-  
-    this.MonoSynth.filter.type = e.value;
-
-    this.setState({
-      settings: Object.assign({}, this.state.settings, {
-        filterType: e.value
-      })
-    });
-  };
-
-  handleFilterEnvelope = e => {
-    this.MonoSynth.filterEnvelope.attack = e[0];
-    this.MonoSynth.filterEnvelope.decay = e[1];
-    this.MonoSynth.filterEnvelope.sustain = e[2];
-    this.MonoSynth.filterEnvelope.release = e[3];
-
-    this.setState({
-      settings: Object.assign({}, this.state.settings, {
-        filterEnvelopeAttack: e[0],
-        filterEnvelopeDecay: e[1],
-        filterEnvelopeSustain: e[2],
-        filterEnvelopeRelease: e[3]
       })
     });
   };
@@ -161,11 +186,11 @@ export class MonoSynth extends Component {
   }
 
   onDownKey(note) {
-    this.MonoSynth.triggerAttack(note);
+    this.FMSynth.triggerAttack(note);
   }
 
   onUpKey(note) {
-    this.MonoSynth.triggerRelease();
+    this.FMSynth.triggerRelease();
   }
 
   onKeyPressed = e => {
@@ -237,16 +262,14 @@ export class MonoSynth extends Component {
       }
 
       if (!this.state.firstPressed && keyNote !== "," && keyNote !== ".") {
-        this.MonoSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
+        this.FMSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
         this.setState({ firstPressed: !this.state.firstPressed });
       }
     }
   };
 
   onKeyLifted = e => {
-  
-
-    this.MonoSynth.triggerRelease();
+    this.FMSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
   };
 
@@ -263,44 +286,38 @@ export class MonoSynth extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-    })
-      .then(res => res.json())
-   
+
+    }).then(res => res.json());
   };
 
   removeSynth = () => {
-    this.props.removeSynth(this.props.synthApi.id)
+    this.props.removeSynth(this.props.synthApi.id);
 
-    fetch('/session_instruments/')
-    .then(response => response.json())
-    .then(sessionInstrumentData => {
-      let thisSI = sessionInstrumentData.data.filter(
-        
-            si => si.attributes.instrument_id === this.props.synthApi.id
-          );
-          thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
-        method: 'delete'
-    })
-    .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
-        method: 'delete'
-    })
-   
-      })
-      return null
-          })
-    });
-   
-};
-
+    fetch("/session_instruments/")
+      .then(response => response.json())
+      .then(sessionInstrumentData => {
+        let thisSI = sessionInstrumentData.data.filter(
+          si => si.attributes.instrument_id === this.props.synthApi.id
+        );
+        thisSI.map(instrument => {
+          fetch(`/session_instruments/${instrument.id}`, {
+            method: "delete"
+          }).then(res => {
+            fetch(`/instruments/${this.props.synthApi.id}`, {
+              method: "delete"
+            });
+          });
+          return "cool";
+        });
+      });
+  };
 
   render() {
     return (
       <div>
         {this.state.instrumentNameToggle ? (
           <div className="synth-title">
-             <EditInstrumentForm
+            <EditInstrumentForm
               updateInstrumentName={this.updateInstrumentName}
               instrumentNameToggle={this.instrumentNameToggle}
               name={this.state.synthName}
@@ -312,29 +329,16 @@ export class MonoSynth extends Component {
           </div>
         )}
 
-        <span
-          role="img"
-          aria-label="Save Synth"
-          className="save-synth"
-          onClick={this.saveSynth}
-        >
-          💾
-        </span>
-
 
         <span
-          role="img"
-          aria-label="Save Synth"
           className="remove-synth"
           onClick={this.removeSynth}
         >
           Delete
         </span>
 
-
-
         <div
-          className="mono-synth"
+          className="fm-synth"
           tabIndex={1}
           ref="divFocus"
           onKeyPress={this.onKeyPressed}
@@ -344,38 +348,59 @@ export class MonoSynth extends Component {
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Oscillator">
+          <TitleAndChildren title="Harmonicity">
+            <Dial value="2" max="4" onChange={this.handleHarmonicity} />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Mod Index">
+            <Dial
+              value="10"
+              min="0"
+              max="40"
+              onChange={this.handleModulationIndex}
+            />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Osc">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
-              onChange={this.handleOscType}
+              onChange={this.handleOsc1}
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Filter">
+          <TitleAndChildren title="Mod">
             <Select
-              options={[
-                "lowpass",
-                "highpass",
-                "bandpass",
-                "lowshelf",
-                "highshelf",
-                "peaking",
-                "notch",
-                "allpass"
-              ]}
-              value={"lowpass"}
-              onChange={this.handleFilterType}
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc2}
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="ADSR">
+          <TitleAndChildren title="Filter Env">
+            <Multislider
+              size={[100, 100]}
+              numberOfSliders="3"
+              min="0"
+              max="10"
+              candycane="3"
+              values={[
+                this.state.settings.modulationEnvelopeAttack,
+                this.state.settings.modulationEnvelopeDecay,
+                this.state.settings.modulationEnvelopeSustain,
+                this.state.settings.modulationEnvelopeRelease
+              ]}
+              onChange={this.handleFilter}
+            />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Env ADSR">
             <Multislider
               size={[100, 100]}
               numberOfSliders="4"
               min="0"
               max="10"
-              candycane="3"
+              candycane="4"
               values={[
                 this.state.settings.envelopeAttack,
                 this.state.settings.envelopeDecay,
@@ -385,24 +410,6 @@ export class MonoSynth extends Component {
               onChange={this.handleEnvelope}
             />
           </TitleAndChildren>
-
-          <TitleAndChildren title="Filter Env">
-            <Multislider
-              size={[100, 100]}
-              numberOfSliders="4"
-              min="0"
-              max="10"
-              candycane="4"
-              values={[
-                this.state.settings.filterEnvelopeAttack,
-                this.state.settings.filterEnvelopeDecay,
-                this.state.settings.filterEnvelopeSustain,
-                this.state.settings.filterEnvelopeRelease
-              ]}
-              onChange={this.handleFilterEnvelope}
-            />
-          </TitleAndChildren>
-
           <KeyBoard
             handleClickOctave={this.handleClickOctave}
             octave={this.state.octave}
@@ -415,4 +422,4 @@ export class MonoSynth extends Component {
   }
 }
 
-export default MonoSynth;
+export default FMSynth;

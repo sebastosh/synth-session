@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
+import SessionNew from "./SessionNew"
 
 
 export class SessionsContainer extends Component {
@@ -23,6 +24,7 @@ export class SessionsContainer extends Component {
     return (
       <div>
         {renderSessions}
+        {!localStorage.token ? <SessionNew /> : null}
       </div>
     );
   }

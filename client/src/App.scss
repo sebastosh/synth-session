@@ -83,9 +83,8 @@ select {
 
 .profile {
   color: white;
-    width: 95%;
-   margin: 0 auto;
-}
+  width: 95%;
+  margin: 0 auto; }
 
 .card {
   display: inline-grid;
@@ -93,11 +92,12 @@ select {
   padding: 0.5em;
   border: 2px solid white; }
 
-.session-title {
-  display: inline-block;
-  font-size: 2em;
-  font-weight: bold;
-  color: white; }
+.session-head {
+  display: flex; 
+  }
+
+.session-head h1 {
+  margin-right: 15px; }
 
 .edit-session-form input,
 select {
@@ -105,7 +105,8 @@ select {
   border: 1px solid;
   background-color: #ffffff;
   font-size: 2em;
-  font-weight: bold; }
+  font-weight: bold;
+  margin-top: 25px; }
 
 .add-synth {
   display: inline-block;
@@ -317,19 +318,7 @@ select {
 .sequencer-box {
   width: 0.5em; }
 
-
-
 /* ---------------------------------------------------------
      Media Queries
      ---------------------------------------------------------*/
-
-@media all and (max-width: 1200px) {
-}
-
-@media all and (max-width: 800px) {
-}
-
-@media all and (max-width: 430px) {
-}
-
 /*  WASUP  */

@@ -8,8 +8,9 @@ import EditInstrumentForm from "../EditInstrumentForm";
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h5 className={"subtitle"}>{title}</h5>
-      {children}
+       {children}
+      <h4 className={"subtitle"}>{title}</h4>
+     
     </div>
   );
 }
@@ -58,17 +59,17 @@ export class MonoSynth extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-    console.log("props: ", this.props);
-    this.setState({
-      synthType: this.props.synthApi.instrument_type,
-      synthName: this.props.synthApi.name
-    });
+    // console.log("props: ", this.props);
+    // this.setState({
+    //   synthType: this.props.synthApi.instrument_type,
+    //   synthName: this.props.synthApi.name
+    // });
 
-    if (this.props.synthApi.settings !== null) {
-      this.setState({
-        settings: this.props.synthApi.settings
-      });
-    }
+    // if (this.props.synthApi.settings !== null) {
+    //   this.setState({
+    //     settings: this.props.synthApi.settings
+    //   });
+    // }
   }
 
 
@@ -313,18 +314,6 @@ export class MonoSynth extends Component {
         )}
 
         <span
-          role="img"
-          aria-label="Save Synth"
-          className="save-synth"
-          onClick={this.saveSynth}
-        >
-          💾
-        </span>
-
-
-        <span
-          role="img"
-          aria-label="Save Synth"
           className="remove-synth"
           onClick={this.removeSynth}
         >

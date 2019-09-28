@@ -8,13 +8,14 @@ import EditInstrumentForm from "../EditInstrumentForm";
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h5 className={"subtitle"}>{title}</h5>
       {children}
+      <h4 className={"subtitle"}>{title}</h4>
+      
     </div>
   );
 }
 
-export class MonoSynth extends Component {
+export class DuoSynth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,28 +26,44 @@ export class MonoSynth extends Component {
       synthName: "",
       synthType: "",
       settings: {
-        frequency: "C4",
-        detune: 0,
-        oscillatorType: "sine",
-        envelopeAttack: 0.001,
-        envelopeDecay: 0.1,
-        envelopeSustain: 0.9,
-        envelopeRelease: 1,
-        filterEnvelopeAttack: 0.06,
-        filterEnvelopeDecay: 0.2,
-        filterEnvelopeSustain: 0.5,
-        filterEnvelopeRelease: 1
+        vibratoAmount: 0.5,
+        vibratoRate: 5,
+        harmonicity: 1.5,
+        voice0Volume: -10,
+        voice0Portamento: 0,
+        voice0OscillatorType: "sine",
+        voice0FilterEnvelopeAttack: 0.01,
+        voice0FilterEnvelopeDecay: 0,
+        voice0FilterEnvelopeSustain: 1,
+        voice0FilterEnvelopeRelease: 0.5,
+        voice0EnvelopeAttack: 0.01,
+        voice0EnvelopeDecay: 0,
+        voice0EnvelopeSustain: 1,
+        voice0EnvelopeRelease: 0.5,
+        voice1Volume: -10,
+        voice1Portamento: 0,
+        voice1OscillatorType: "sine",
+        voice1FilterEnvelopeAttack: 0.01,
+        voice1FilterEnvelopeDecay: 0,
+        voice1FilterEnvelopeSustain: 1,
+        voice1FilterEnvelopeRelease: 0.5,
+        voice1EnvelopeAttack: 0.01,
+        voice1EnvelopeDecay: 0,
+        voice1EnvelopeSustain: 1,
+        voice1EnvelopeRelease: 0.5
       }
     };
 
     this.gain = new Tone.Gain(0.1).toMaster();
-    this.MonoSynth = new Tone.MonoSynth().connect(this.gain);
+    this.DuoSynth = new Tone.DuoSynth().connect(this.gain);
 
     // bindings
     this.handleGain = this.handleGain.bind(this);
-    this.handleOscType = this.handleOscType.bind(this);
+    this.handleOsc1 = this.handleOsc1.bind(this);
+    this.handleOsc2 = this.handleOsc2.bind(this);
+    this.handleVibrato = this.handleVibrato.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
     this.handleEnvelope = this.handleEnvelope.bind(this);
-    this.handleFilterEnvelope = this.handleFilterEnvelope.bind(this);
 
     this.onDownKey = this.onDownKey.bind(this);
     this.onUpKey = this.onUpKey.bind(this);
@@ -54,6 +71,8 @@ export class MonoSynth extends Component {
     this.onKeyPressed = this.onKeyPressed.bind(this);
     this.onKeyLifted = this.onKeyLifted.bind(this);
     this.handleClickOctave = this.handleClickOctave.bind(this);
+
+    // this.sequencer = new Nexus.Sequencer('#sequencer');
   }
 
   componentDidMount() {
@@ -71,7 +90,6 @@ export class MonoSynth extends Component {
     }
   }
 
-
   instrumentNameToggle = e => {
     this.setState(
       { instrumentNameToggle: !this.state.instrumentNameToggle },
@@ -83,65 +101,94 @@ export class MonoSynth extends Component {
     );
   };
 
+
   updateInstrumentName = name => {
     console.log("name: ", name);
     this.setState({ synthName: name });
     this.instrumentNameToggle();  };
 
+
   handleGain = e => {
     this.gain.gain.value = e;
   };
-
-  handleOscType = e => {
-   
-    this.MonoSynth.oscillator.type = e.value;
+  handleOsc1 = e => {
+    this.DuoSynth.voice0.oscillator.type = e.value;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        oscillatorType: e.value
+        voice0OscillatorType: e.value
+      })
+    });
+  };
+  handleOsc2 = e => {
+    this.DuoSynth.voice1.oscillator.type = e.value;
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        voice1OscillatorType: e.value
+      })
+    });
+  };
+  handleVibrato = e => {
+    this.DuoSynth.vibratoAmount.value = e[0];
+    this.DuoSynth.vibratoRate.value = e[1];
+    this.DuoSynth.harmonicity.value = e[2];
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        vibratoAmount: e[0],
+        vibratoRate: e[1],
+        harmonicity: e[2]
+      })
+    });
+  };
+
+  handleFilter = e => {
+    this.DuoSynth.voice0.filterEnvelope.attack = e[0];
+    this.DuoSynth.voice0.filterEnvelope.decay = e[1];
+    this.DuoSynth.voice0.filterEnvelope.sustain = e[2];
+    this.DuoSynth.voice0.filterEnvelope.release = e[3];
+
+    this.DuoSynth.voice1.filterEnvelope.attack = e[0];
+    this.DuoSynth.voice1.filterEnvelope.decay = e[1];
+    this.DuoSynth.voice1.filterEnvelope.sustain = e[2];
+    this.DuoSynth.voice1.filterEnvelope.release = e[3];
+
+    this.setState({
+      settings: Object.assign({}, this.state.settings, {
+        voice0FilterEnvelopeAttack: e[0],
+        voice0FilterEnvelopeDecay: e[1],
+        voice0FilterEnvelopeSustain: e[2],
+        voice0FilterEnvelopeRelease: e[3],
+        voice1FilterEnvelopeAttack: e[0],
+        voice1FilterEnvelopeDecay: e[1],
+        voice1FilterEnvelopeSustain: e[2],
+        voice1FilterEnvelopeRelease: e[3]
       })
     });
   };
 
   handleEnvelope = e => {
-    this.MonoSynth.envelope.attack = e[0];
-    this.MonoSynth.envelope.decay = e[1];
-    this.MonoSynth.envelope.sustain = e[2];
-    this.MonoSynth.envelope.release = e[3];
+    this.DuoSynth.voice0.envelope.attack = e[0];
+    this.DuoSynth.voice0.envelope.decay = e[1];
+    this.DuoSynth.voice0.envelope.sustain = e[2];
+    this.DuoSynth.voice0.envelope.release = e[3];
+
+    this.DuoSynth.voice1.envelope.attack = e[0];
+    this.DuoSynth.voice1.envelope.decay = e[1];
+    this.DuoSynth.voice1.envelope.sustain = e[2];
+    this.DuoSynth.voice1.envelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
-        envelopeAttack: e[0],
-        envelopeDecay: e[1],
-        envelopeSustain: e[2],
-        envelopeRelease: e[3]
-      })
-    });
-  };
-
-  handleFilterType = e => {
-  
-    this.MonoSynth.filter.type = e.value;
-
-    this.setState({
-      settings: Object.assign({}, this.state.settings, {
-        filterType: e.value
-      })
-    });
-  };
-
-  handleFilterEnvelope = e => {
-    this.MonoSynth.filterEnvelope.attack = e[0];
-    this.MonoSynth.filterEnvelope.decay = e[1];
-    this.MonoSynth.filterEnvelope.sustain = e[2];
-    this.MonoSynth.filterEnvelope.release = e[3];
-
-    this.setState({
-      settings: Object.assign({}, this.state.settings, {
-        filterEnvelopeAttack: e[0],
-        filterEnvelopeDecay: e[1],
-        filterEnvelopeSustain: e[2],
-        filterEnvelopeRelease: e[3]
+        voice0EnvelopeAttack: e[0],
+        voice0EnvelopeDecay: e[1],
+        voice0EnvelopeSustain: e[2],
+        voice0EnvelopeRelease: e[3],
+        voice1EnvelopeAttack: e[0],
+        voice1EnvelopeDecay: e[1],
+        voice1EnvelopeSustain: e[2],
+        voice1EnvelopeRelease: e[3]
       })
     });
   };
@@ -161,11 +208,11 @@ export class MonoSynth extends Component {
   }
 
   onDownKey(note) {
-    this.MonoSynth.triggerAttack(note);
+    this.DuoSynth.triggerAttack(note);
   }
 
   onUpKey(note) {
-    this.MonoSynth.triggerRelease();
+    this.DuoSynth.triggerRelease();
   }
 
   onKeyPressed = e => {
@@ -237,16 +284,14 @@ export class MonoSynth extends Component {
       }
 
       if (!this.state.firstPressed && keyNote !== "," && keyNote !== ".") {
-        this.MonoSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
+        this.DuoSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
         this.setState({ firstPressed: !this.state.firstPressed });
       }
     }
   };
 
   onKeyLifted = e => {
-  
-
-    this.MonoSynth.triggerRelease();
+    this.DuoSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
   };
 
@@ -263,37 +308,31 @@ export class MonoSynth extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-    })
-      .then(res => res.json())
-   
+      // body: {"settings": this.state.settings}
+    }).then(res => res.json());
   };
 
   removeSynth = () => {
-    this.props.removeSynth(this.props.synthApi.id)
+    this.props.removeSynth(this.props.synthApi.id);
 
-    fetch('/session_instruments/')
-    .then(response => response.json())
-    .then(sessionInstrumentData => {
-      let thisSI = sessionInstrumentData.data.filter(
-        
-            si => si.attributes.instrument_id === this.props.synthApi.id
-          );
-          thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
-        method: 'delete'
-    })
-    .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
-        method: 'delete'
-    })
-   
-      })
-      return null
-          })
-    });
-   
-};
-
+    fetch("/session_instruments/")
+      .then(response => response.json())
+      .then(sessionInstrumentData => {
+        let thisSI = sessionInstrumentData.data.filter(
+          si => si.attributes.instrument_id === this.props.synthApi.id
+        );
+        thisSI.map(instrument => {
+          fetch(`/session_instruments/${instrument.id}`, {
+            method: "delete"
+          }).then(res => {
+            fetch(`/instruments/${this.props.synthApi.id}`, {
+              method: "delete"
+            });
+          });
+          return null;
+        });
+      });
+  };
 
   render() {
     return (
@@ -312,29 +351,16 @@ export class MonoSynth extends Component {
           </div>
         )}
 
-        <span
-          role="img"
-          aria-label="Save Synth"
-          className="save-synth"
-          onClick={this.saveSynth}
-        >
-          💾
-        </span>
-
 
         <span
-          role="img"
-          aria-label="Save Synth"
           className="remove-synth"
           onClick={this.removeSynth}
         >
           Delete
         </span>
 
-
-
         <div
-          className="mono-synth"
+          className="duo-synth"
           tabIndex={1}
           ref="divFocus"
           onKeyPress={this.onKeyPressed}
@@ -344,49 +370,56 @@ export class MonoSynth extends Component {
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Oscillator">
+          <TitleAndChildren title="Osc 1">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
-              onChange={this.handleOscType}
+              onChange={this.handleOsc1}
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Filter">
+          <TitleAndChildren title="Osc 2">
             <Select
-              options={[
-                "lowpass",
-                "highpass",
-                "bandpass",
-                "lowshelf",
-                "highshelf",
-                "peaking",
-                "notch",
-                "allpass"
-              ]}
-              value={"lowpass"}
-              onChange={this.handleFilterType}
+              options={["sine", "square", "sawtooth", "triangle"]}
+              value={"sine"}
+              onChange={this.handleOsc2}
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="ADSR">
+          <TitleAndChildren title="Vibrato">
             <Multislider
               size={[100, 100]}
-              numberOfSliders="4"
+              numberOfSliders="3"
               min="0"
               max="10"
               candycane="3"
               values={[
-                this.state.settings.envelopeAttack,
-                this.state.settings.envelopeDecay,
-                this.state.settings.envelopeSustain,
-                this.state.settings.envelopeRelease
+                this.state.settings.vibratoAmount,
+                this.state.settings.vibratoRate,
+                this.state.settings.harmonicity
               ]}
-              onChange={this.handleEnvelope}
+              onChange={this.handleVibrato}
             />
           </TitleAndChildren>
 
           <TitleAndChildren title="Filter Env">
+            <Multislider
+              size={[100, 100]}
+              numberOfSliders="3"
+              min="0"
+              max="10"
+              candycane="3"
+              values={[
+                this.state.settings.voice0FilterEnvelopeAttack,
+                this.state.settings.voice0FilterEnvelopeDecay,
+                this.state.settings.voice0FilterEnvelopeSustain,
+                this.state.settings.voice0FilterEnvelopeRelease
+              ]}
+              onChange={this.handleFilter}
+            />
+          </TitleAndChildren>
+
+          <TitleAndChildren title="Env ADSR">
             <Multislider
               size={[100, 100]}
               numberOfSliders="4"
@@ -394,15 +427,14 @@ export class MonoSynth extends Component {
               max="10"
               candycane="4"
               values={[
-                this.state.settings.filterEnvelopeAttack,
-                this.state.settings.filterEnvelopeDecay,
-                this.state.settings.filterEnvelopeSustain,
-                this.state.settings.filterEnvelopeRelease
+                this.state.settings.voice0EnvelopeAttack,
+                this.state.settings.voice0EnvelopeDecay,
+                this.state.settings.voice0EnvelopeSustain,
+                this.state.settings.voice0EnvelopeRelease
               ]}
-              onChange={this.handleFilterEnvelope}
+              onChange={this.handleEnvelope}
             />
           </TitleAndChildren>
-
           <KeyBoard
             handleClickOctave={this.handleClickOctave}
             octave={this.state.octave}
@@ -415,4 +447,4 @@ export class MonoSynth extends Component {
   }
 }
 
-export default MonoSynth;
+export default DuoSynth;

@@ -3,14 +3,15 @@ import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
-import KeyBoard from "./Piano/KeyBoard";
+import KeyBoard from "./piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h4 className={"subtitle"}>{title}</h4>
-      {children}
+           {children}
+<h4 className={"subtitle"}>{title}</h4>
+
     </div>
   );
 }
@@ -342,7 +343,7 @@ export class FMSynth extends Component {
           className="remove-synth"
           onClick={this.removeSynth}
         >
-          ⓧ
+          Delete
         </span>
 
         <div

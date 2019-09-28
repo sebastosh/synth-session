@@ -6,8 +6,9 @@ import AMSynth from './AMSynth'
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h4 className={"subtitle"}>{title}</h4>
-      {children}
+           {children}
+<h4 className={"subtitle"}>{title}</h4>
+
     </div>
   );
 }
@@ -127,7 +128,7 @@ export class Synth extends Component {
           className="remove-synth"
           onClick={this.removeSynth}
         >
-          ⓧ
+          Delete
         </span>
           <AMSynth />
         <div

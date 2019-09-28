@@ -23,9 +23,9 @@ export class EditSessionForm extends Component {
 
   render() {
     return (
-      <div className="synth-title">
+      <div className="synth-title-edit">
 
-       <form className="edit-session-form" onSubmit={this.handleSubmit}>
+       <form className="edit-instrument-form" onSubmit={this.handleSubmit}>
        <input
             ref="divFocus"
             tabIndex={1}

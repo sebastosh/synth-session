@@ -47,28 +47,30 @@ export class NewInstrumentForm extends Component {
       })
         .then(res => res.json())
         .then(newInstrumentReturn => {
-          
-          let newSessionInstrument = {
-            name: `${this.props.sessionName}-${instrument.label}`,
-            session_id: this.props.match.params.sessionsId,
-            instrument_id: newInstrumentReturn.id
-          };
-          console.log('newSessionInstrument: ', newSessionInstrument);
-
-          fetch('/session_instruments', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            },
-            body: JSON.stringify(newSessionInstrument)
-          })
-            .then(res => res.json())
-            .then(newSessionInstrumentReturn => {
-
-              this.props.addNewInstrument(newInstrumentReturn);
+          console.log('newInstrumentReturn: ', newInstrumentReturn);
+                       this.props.addNewInstrument(newInstrumentReturn);
               this.props.newInstrumentForm()
-            });
+    //       let newSessionInstrument = {
+    //         name: `${this.props.sessionName}-${instrument.label}`,
+    //         session_id: this.props.match.params.sessionsId,
+    //         instrument_id: newInstrumentReturn.id
+    //       };
+    //       console.log('newSessionInstrument: ', newSessionInstrument);
+
+    //       fetch('/session_instruments', {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Accept: "application/json"
+    //         },
+    //         body: JSON.stringify(newSessionInstrument)
+    //       })
+    //         .then(res => res.json())
+    //         .then(newSessionInstrumentReturn => {
+
+    //           this.props.addNewInstrument(newInstrumentReturn);
+    //           this.props.newInstrumentForm()
+    //         });
         });
         return "cool"
     });

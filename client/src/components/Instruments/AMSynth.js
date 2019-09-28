@@ -3,14 +3,15 @@ import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
-import KeyBoard from "./Piano/KeyBoard";
+import KeyBoard from "./piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      <h4 className={"subtitle"}>{title}</h4>
       {children}
+      <h4 className={"subtitle"}>{title}</h4>
+      
     </div>
   );
 }
@@ -65,18 +66,15 @@ export class FMSynth extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-  }
-
-  componentWillReceiveProps(props) {
-    console.log("props: ", props);
+    console.log("props: ", this.props);
     this.setState({
-      synthType: props.synthApi.instrument_type,
-      synthName: props.synthApi.name
+      synthType: this.props.synthApi.instrument_type,
+      synthName: this.props.synthApi.name
     });
 
-    if (props.synthApi.settings !== null) {
+    if (this.props.synthApi.settings !== null) {
       this.setState({
-        settings: props.synthApi.settings
+        settings: this.props.synthApi.settings
       });
     }
   }
@@ -288,7 +286,7 @@ export class FMSynth extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-      // body: {"settings": this.state.settings}
+
     }).then(res => res.json());
   };
 
@@ -322,12 +320,12 @@ export class FMSynth extends Component {
             <EditInstrumentForm
               updateInstrumentName={this.updateInstrumentName}
               instrumentNameToggle={this.instrumentNameToggle}
-              name={this.props.synthApi.name}
+              name={this.state.synthName}
             />
           </div>
         ) : (
           <div onClick={this.instrumentNameToggle} className="synth-title">
-            {this.props.synthApi.name}
+            {this.state.synthName}
           </div>
         )}
 
@@ -345,7 +343,7 @@ export class FMSynth extends Component {
           className="remove-synth"
           onClick={this.removeSynth}
         >
-          ⓧ
+          Delete
         </span>
 
         <div

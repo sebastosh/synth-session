@@ -82,6 +82,20 @@ export class NavBar extends Component {
           </div>
         ) : (
           <div className="navuser">
+             {this.state.help ? (
+              <div className="key-ui">
+                <img onClick={this.showHelp} src="/Piano.png" alt="piano keyboard mapping" />
+              </div>
+            ) : null}
+              <span
+              onClick={this.showHelp}
+              className="help-button"
+              role="img"
+              aria-label="chat"
+              alt="Help"
+            >
+              ？
+            </span>
             <NavLink onClick={this.resetState} to="/login">
               <span role="img" aria-label="Login" alt="Log in">
                 ⏀

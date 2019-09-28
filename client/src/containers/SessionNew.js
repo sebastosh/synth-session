@@ -1,31 +1,23 @@
 import React from "react";
-import DuoSynth from "../components/instruments/DuoSynth";
-import MonoSynth from "../components/instruments/MonoSynth";
-import FMSynth from "../components/instruments/FMSynth";
-import NewInstrumentForm from "../components/NewInstrumentForm";
+import DuoSynthNew from "../components/instruments/DuoSynthNew";
+import MonoSynthNew from "../components/instruments/MonoSynthNew";
+import FMSynthNew from "../components/instruments/FMSynthNew";
+import AMSynthNew from "../components/instruments/AMSynthNew";
+import NewInstrumentForm from "../components/AddInstrumentForm";
 import EditSessionForm from "../components/EditSessionForm";
 
 // const API = "";
 
-class Session extends React.Component {
+class SessionNew extends React.Component {
   state = {
-    sessionName: "",
+    sessionName: "New Session",
     sessionInstruments: [],
     addNew: false,
     editSessionName: false
   };
 
   componentDidMount() {
-    const SESSION_URL = this.props.match.url;
 
-    fetch(SESSION_URL)
-      .then(response => response.json())
-      .then(session => {
-        this.setState({
-          sessionName: session.data.attributes.name,
-          sessionInstruments: session.data.attributes.instruments
-        });
-      });
   }
 
   newInstrumentForm = () => {
@@ -45,23 +37,28 @@ class Session extends React.Component {
   };
 
   updateSessionName = name => {
-    const SESSION_URL = this.props.match.url;
+    console.log('name: ', name);
+    this.setState({
+            sessionName: name,
+            editSessionName: !this.state.editSessionName
+          });
+    // const SESSION_URL = this.props.match.url;
 
-    fetch(SESSION_URL, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({ name: name })
-    })
-      .then(res => res.json())
-      .then(synthObject => {
-        this.setState({
-          sessionName: synthObject.name,
-          editSessionName: !this.state.editSessionName
-        });
-      });
+    // fetch(SESSION_URL, {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json"
+    //   },
+    //   body: JSON.stringify({ name: name })
+    // })
+    //   .then(res => res.json())
+    //   .then(synthObject => {
+    //     this.setState({
+    //       sessionName: synthObject.name,
+    //       editSessionName: !this.state.editSessionName
+    //     });
+    //   });
   };
 
   removeSynth = synthId => {
@@ -78,7 +75,7 @@ class Session extends React.Component {
       switch (instrument.instrument_type) {
         case "MonoSynth":
           return (
-            <MonoSynth
+            <MonoSynthNew
               key={instrument.id}
               synthApi={instrument}
               removeSynth={this.removeSynth}
@@ -86,7 +83,7 @@ class Session extends React.Component {
           );
         case "DuoSynth":
           return (
-            <DuoSynth
+            <DuoSynthNew
               key={instrument.id}
               synthApi={instrument}
               removeSynth={this.removeSynth}
@@ -94,7 +91,15 @@ class Session extends React.Component {
           );
         case "FMSynth":
           return (
-            <FMSynth
+            <FMSynthNew
+              key={instrument.id}
+              synthApi={instrument}
+              removeSynth={this.removeSynth}
+            />
+          );
+          case "AMSynth":
+          return (
+            <AMSynthNew
               key={instrument.id}
               synthApi={instrument}
               removeSynth={this.removeSynth}
@@ -115,11 +120,9 @@ class Session extends React.Component {
             sessionName={this.state.sessionName}
           />
         ) : (
-          <div>
+          <div className="session-head">
             <h1 onClick={this.editSessionName}>{this.state.sessionName}</h1>
-            <div className="add-synth" onClick={this.newInstrumentForm}>
-              + Add Synth
-            </div>
+            <h1 onClick={this.newInstrumentForm}>| + Add Synth</h1>
           </div>
         )}
 
@@ -137,4 +140,4 @@ class Session extends React.Component {
   }
 }
 
-export default Session;
+export default SessionNew;
