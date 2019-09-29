@@ -1,10 +1,12 @@
 import React from "react";
-import DuoSynthNew from "../components/instruments/DuoSynthNew";
-import MonoSynthNew from "../components/instruments/MonoSynthNew";
-import FMSynthNew from "../components/instruments/FMSynthNew";
-import AMSynthNew from "../components/instruments/AMSynthNew";
+import { Link } from "react-router-dom";
+import DuoSynthNew from "../components/Instruments/DuoSynthNew";
+import MonoSynthNew from "../components/Instruments/MonoSynthNew";
+import FMSynthNew from "../components/Instruments/FMSynthNew";
+import AMSynthNew from "../components/Instruments/AMSynthNew";
 import NewInstrumentForm from "../components/AddInstrumentForm";
 import EditSessionForm from "../components/EditSessionForm";
+import Popup from "reactjs-popup";
 
 // const API = "";
 
@@ -16,9 +18,7 @@ class SessionNew extends React.Component {
     editSessionName: false
   };
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   newInstrumentForm = () => {
     this.setState({
@@ -37,11 +37,11 @@ class SessionNew extends React.Component {
   };
 
   updateSessionName = name => {
-    console.log('name: ', name);
+    console.log("name: ", name);
     this.setState({
-            sessionName: name,
-            editSessionName: !this.state.editSessionName
-          });
+      sessionName: name,
+      editSessionName: !this.state.editSessionName
+    });
     // const SESSION_URL = this.props.match.url;
 
     // fetch(SESSION_URL, {
@@ -97,7 +97,7 @@ class SessionNew extends React.Component {
               removeSynth={this.removeSynth}
             />
           );
-          case "AMSynth":
+        case "AMSynth":
           return (
             <AMSynthNew
               key={instrument.id}
@@ -112,20 +112,46 @@ class SessionNew extends React.Component {
 
     return (
       <div className="session-container">
-        {this.state.editSessionName ? (
-          <EditSessionForm
-            editSessionName={this.editSessionName}
-            updateSessionName={this.updateSessionName}
-            addNewInstrument={this.addNewInstrument}
-            sessionName={this.state.sessionName}
-          />
-        ) : (
-          <div className="session-head">
-            <h1 onClick={this.editSessionName}>{this.state.sessionName}</h1>
-            <h1 onClick={this.newInstrumentForm}>| + Add Synth</h1>
-          </div>
-        )}
+        <div className="session-header">
+          {this.state.editSessionName ? (
+            <EditSessionForm
+              editSessionName={this.editSessionName}
+              updateSessionName={this.updateSessionName}
+              addNewInstrument={this.addNewInstrument}
+              sessionName={this.state.sessionName}
+            />
+          ) : (
+            <div className="session-head">
+              <h1 onClick={this.editSessionName}>{this.state.sessionName}</h1>
+              <img
+                onClick={this.newInstrumentForm}
+                src="/circle-plus.svg"
+                alt="add a synth"
+              />
+            </div>
+          )}
 
+          <Popup
+            trigger={<img src="/floppy.svg" alt="Save a session" />}
+            modal
+            closeOnDocumentClick
+          >
+            <h5>
+           
+              Log in or Sign Up to save your sessions and synth modules.
+            </h5>
+            <div className="prompt-login">
+              <div className="card">
+                <Link to="/login">Log in</Link>
+              </div>
+
+              <div className="card">
+                <Link to="/signup">Sign Up</Link>
+              </div>
+            </div>
+          </Popup>
+
+        </div>
         {this.state.addNew ? (
           <NewInstrumentForm
             newInstrumentForm={this.newInstrumentForm}

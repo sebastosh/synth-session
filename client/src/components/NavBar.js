@@ -59,24 +59,22 @@ export class NavBar extends Component {
               onClick={this.showHelp}
               className="help-button"
               role="img"
-              aria-label="chat"
+              aria-label="help"
               alt="Help"
             >
-              ？
+              <img src="/question-circle.svg" alt="piano keyboard mapping" />
             </span>
-            <div className="nav-rotate">
+            <div className="nav">
            
               <NavLink onClick={this.resetState} to="/profile">
                 <span role="img" aria-label="profile" alt="Profile">
-                  ⏀
+                <img src="/home.svg" alt="piano keyboard mapping" />
                 </span>
               </NavLink>
             </div>
-            <div className="nav-rotate">
+            <div className="nav">
               <NavLink onClick={this.resetState} to="/signout">
-                <span role="img" aria-label="Sign Out" alt="Sign Out">
-                ⏅
-                </span>
+                Log Out
               </NavLink>
             </div>
           </div>
@@ -91,23 +89,23 @@ export class NavBar extends Component {
               onClick={this.showHelp}
               className="help-button"
               role="img"
-              aria-label="chat"
+              aria-label="help"
               alt="Help"
             >
-              ？
+              <img src="/question-circle.svg" alt="piano keyboard mapping" />
             </span>
-            <NavLink onClick={this.resetState} to="/login">
+            <NavLink className="nav" onClick={this.resetState} to="/login">
               <span role="img" aria-label="Login" alt="Log in">
-                ⏀
+                Log in
               </span>
             </NavLink>
-            <div className="nav-rotate">
-            <NavLink onClick={this.resetState} to="/signup">
+   
+            <NavLink className="nav" onClick={this.resetState} to="/signup">
               <span role="img" aria-label="Sign Up" alt="Sign Up">
-              ⏄
+              Sign Up
               </span>
             </NavLink>
-            </div>
+ 
           </div>
         )}
       </div>

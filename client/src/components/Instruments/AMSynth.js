@@ -3,20 +3,20 @@ import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
-import KeyBoard from "./piano/KeyBoard";
+import KeyBoard from "./Piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
       {children}
-      <h4 className={"subtitle"}>{title}</h4>
+      <h5 className={"subtitle"}>{title}</h5>
       
     </div>
   );
 }
 
-export class FMSynth extends Component {
+export class AMSynth extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +28,7 @@ export class FMSynth extends Component {
       synthType: "",
       settings: {
         harmonicity: 1.5,
-        modulationIndex: 0,
+        detune : 0,
         oscillatorType: "sine",
         modulationType: "sine",
         modulationEnvelopeAttack: 0.01,
@@ -43,7 +43,7 @@ export class FMSynth extends Component {
     };
 
     this.gain = new Tone.Gain(0.1).toMaster();
-    this.FMSynth = new Tone.FMSynth().connect(this.gain);
+    this.AMSynth = new Tone.AMSynth().connect(this.gain);
 
     // bindings
     this.handleGain = this.handleGain.bind(this);
@@ -101,7 +101,7 @@ export class FMSynth extends Component {
   };
 
   handleHarmonicity = e => {
-    this.FMSynth.harmonicity.value = e;
+    this.AMSynth.harmonicity.value = e;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -111,7 +111,7 @@ export class FMSynth extends Component {
   };
 
   handleModulationIndex = e => {
-    this.FMSynth.modulationIndex.value = e;
+    this.AMSynth.modulationIndex.value = e;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -121,7 +121,7 @@ export class FMSynth extends Component {
   };
 
   handleOsc1 = e => {
-    this.FMSynth.oscillator.type = e.value;
+    this.AMSynth.oscillator.type = e.value;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -130,7 +130,7 @@ export class FMSynth extends Component {
     });
   };
   handleOsc2 = e => {
-    this.FMSynth.modulation.type = e.value;
+    this.AMSynth.modulation.type = e.value;
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -140,10 +140,10 @@ export class FMSynth extends Component {
   };
 
   handleFilter = e => {
-    this.FMSynth.modulationEnvelope.attack = e[0];
-    this.FMSynth.modulationEnvelope.decay = e[1];
-    this.FMSynth.modulationEnvelope.sustain = e[2];
-    this.FMSynth.modulationEnvelope.release = e[3];
+    this.AMSynth.modulationEnvelope.attack = e[0];
+    this.AMSynth.modulationEnvelope.decay = e[1];
+    this.AMSynth.modulationEnvelope.sustain = e[2];
+    this.AMSynth.modulationEnvelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -156,10 +156,10 @@ export class FMSynth extends Component {
   };
 
   handleEnvelope = e => {
-    this.FMSynth.envelope.attack = e[0];
-    this.FMSynth.envelope.decay = e[1];
-    this.FMSynth.envelope.sustain = e[2];
-    this.FMSynth.envelope.release = e[3];
+    this.AMSynth.envelope.attack = e[0];
+    this.AMSynth.envelope.decay = e[1];
+    this.AMSynth.envelope.sustain = e[2];
+    this.AMSynth.envelope.release = e[3];
 
     this.setState({
       settings: Object.assign({}, this.state.settings, {
@@ -186,11 +186,11 @@ export class FMSynth extends Component {
   }
 
   onDownKey(note) {
-    this.FMSynth.triggerAttack(note);
+    this.AMSynth.triggerAttack(note);
   }
 
   onUpKey(note) {
-    this.FMSynth.triggerRelease();
+    this.AMSynth.triggerRelease();
   }
 
   onKeyPressed = e => {
@@ -262,14 +262,14 @@ export class FMSynth extends Component {
       }
 
       if (!this.state.firstPressed && keyNote !== "," && keyNote !== ".") {
-        this.FMSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
+        this.AMSynth.triggerAttack(`${pressedNote}${this.state.octave}`);
         this.setState({ firstPressed: !this.state.firstPressed });
       }
     }
   };
 
   onKeyLifted = e => {
-    this.FMSynth.triggerRelease();
+    this.AMSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
   };
 
@@ -314,8 +314,10 @@ export class FMSynth extends Component {
 
   render() {
     return (
-      <div>
-        {this.state.instrumentNameToggle ? (
+      <div className="synth">
+      <div className="synth-meta">
+       <div>
+       {this.state.instrumentNameToggle ? (
           <div className="synth-title">
             <EditInstrumentForm
               updateInstrumentName={this.updateInstrumentName}
@@ -337,6 +339,7 @@ export class FMSynth extends Component {
         >
           💾
         </span>
+       </div>
         <span
           role="img"
           aria-label="Save Synth"
@@ -345,9 +348,10 @@ export class FMSynth extends Component {
         >
           Delete
         </span>
+        </div>
 
         <div
-          className="fm-synth"
+          className="am-synth"
           tabIndex={1}
           ref="divFocus"
           onKeyPress={this.onKeyPressed}
@@ -361,16 +365,10 @@ export class FMSynth extends Component {
             <Dial value="2" max="4" onChange={this.handleHarmonicity} />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Mod Index">
-            <Dial
-              value="10"
-              min="0"
-              max="40"
-              onChange={this.handleModulationIndex}
-            />
-          </TitleAndChildren>
 
-          <TitleAndChildren title="Osc">
+
+<div>
+<TitleAndChildren title="Osc">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
@@ -385,6 +383,7 @@ export class FMSynth extends Component {
               onChange={this.handleOsc2}
             />
           </TitleAndChildren>
+</div>
 
           <TitleAndChildren title="Filter Env">
             <Multislider
@@ -431,4 +430,4 @@ export class FMSynth extends Component {
   }
 }
 
-export default FMSynth;
+export default AMSynth;

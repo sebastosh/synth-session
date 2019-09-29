@@ -7,7 +7,7 @@ function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
            {children}
-<h4 className={"subtitle"}>{title}</h4>
+<h5 className={"subtitle"}>{title}</h5>
 
     </div>
   );

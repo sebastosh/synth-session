@@ -3,14 +3,14 @@ import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
-import KeyBoard from "./piano/KeyBoard";
+import KeyBoard from "./Piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
            {children}
-<h4 className={"subtitle"}>{title}</h4>
+<h5 className={"subtitle"}>{title}</h5>
 
     </div>
   );
@@ -370,7 +370,7 @@ export class FMSynth extends Component {
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Osc">
+<div>          <TitleAndChildren title="Osc">
             <Select
               options={["sine", "square", "sawtooth", "triangle"]}
               value={"sine"}
@@ -385,6 +385,7 @@ export class FMSynth extends Component {
               onChange={this.handleOsc2}
             />
           </TitleAndChildren>
+          </div>
 
           <TitleAndChildren title="Filter Env">
             <Multislider

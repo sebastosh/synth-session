@@ -3,13 +3,12 @@ import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 
 import ReactDOM from "react-dom";
-import KeyBoard from "./piano/KeyBoard";
+import KeyBoard from "./Piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-      
       {children}
       <h5 className={"subtitle"}>{title}</h5>
     </div>
@@ -286,7 +285,6 @@ export class FMSynth extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-
     }).then(res => res.json());
   };
 
@@ -314,28 +312,26 @@ export class FMSynth extends Component {
 
   render() {
     return (
-      <div>
-        {this.state.instrumentNameToggle ? (
-          <div className="synth-title">
-            <EditInstrumentForm
-              updateInstrumentName={this.updateInstrumentName}
-              instrumentNameToggle={this.instrumentNameToggle}
-              name={this.state.synthName}
-            />
-          </div>
-        ) : (
-          <div onClick={this.instrumentNameToggle} className="synth-title">
-            {this.state.synthName}
-          </div>
-        )}
+      <div className="synth">
+        <div className="synth-meta">
+          {this.state.instrumentNameToggle ? (
+            <div className="synth-title">
+              <EditInstrumentForm
+                updateInstrumentName={this.updateInstrumentName}
+                instrumentNameToggle={this.instrumentNameToggle}
+                name={this.state.synthName}
+              />
+            </div>
+          ) : (
+            <div onClick={this.instrumentNameToggle} className="synth-title">
+              {this.state.synthName}
+            </div>
+          )}
 
-
-        <span
-          className="remove-synth"
-          onClick={this.removeSynth}
-        >
-          Delete
-        </span>
+          <span className="remove-synth" onClick={this.removeSynth}>
+            Delete
+          </span>
+        </div>
 
         <div
           className="fm-synth"
@@ -361,21 +357,23 @@ export class FMSynth extends Component {
             />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Osc">
-            <Select
-              options={["sine", "square", "sawtooth", "triangle"]}
-              value={"sine"}
-              onChange={this.handleOsc1}
-            />
-          </TitleAndChildren>
+          <div>
+            <TitleAndChildren title="Osc">
+              <Select
+                options={["sine", "square", "sawtooth", "triangle"]}
+                value={"sine"}
+                onChange={this.handleOsc1}
+              />
+            </TitleAndChildren>
 
-          <TitleAndChildren title="Mod">
-            <Select
-              options={["sine", "square", "sawtooth", "triangle"]}
-              value={"sine"}
-              onChange={this.handleOsc2}
-            />
-          </TitleAndChildren>
+            <TitleAndChildren title="Mod">
+              <Select
+                options={["sine", "square", "sawtooth", "triangle"]}
+                value={"sine"}
+                onChange={this.handleOsc2}
+              />
+            </TitleAndChildren>
+          </div>
 
           <TitleAndChildren title="Filter Env">
             <Multislider

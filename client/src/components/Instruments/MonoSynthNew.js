@@ -2,15 +2,14 @@ import React, { Component } from "react";
 import Tone from "tone";
 import { Dial, Multislider, Select } from "react-nexusui";
 import ReactDOM from "react-dom";
-import KeyBoard from "./piano/KeyBoard";
+import KeyBoard from "./Piano/KeyBoard";
 import EditInstrumentForm from "../EditInstrumentForm";
 
 function TitleAndChildren({ children, title }) {
   return (
     <div style={{ margin: 0 }}>
-       {children}
-      <h4 className={"subtitle"}>{title}</h4>
-     
+      {children}
+      <h5 className={"subtitle"}>{title}</h5>
     </div>
   );
 }
@@ -59,19 +58,18 @@ export class MonoSynth extends Component {
 
   componentDidMount() {
     ReactDOM.findDOMNode(this.refs.divFocus).focus();
-    // console.log("props: ", this.props);
-    // this.setState({
-    //   synthType: this.props.synthApi.instrument_type,
-    //   synthName: this.props.synthApi.name
-    // });
+    console.log("props: ", this.props);
+    this.setState({
+      synthType: this.props.synthApi.instrument_type,
+      synthName: this.props.synthApi.name
+    });
 
-    // if (this.props.synthApi.settings !== null) {
-    //   this.setState({
-    //     settings: this.props.synthApi.settings
-    //   });
-    // }
+    if (this.props.synthApi.settings !== null) {
+      this.setState({
+        settings: this.props.synthApi.settings
+      });
+    }
   }
-
 
   instrumentNameToggle = e => {
     this.setState(
@@ -87,14 +85,14 @@ export class MonoSynth extends Component {
   updateInstrumentName = name => {
     console.log("name: ", name);
     this.setState({ synthName: name });
-    this.instrumentNameToggle();  };
+    this.instrumentNameToggle();
+  };
 
   handleGain = e => {
     this.gain.gain.value = e;
   };
 
   handleOscType = e => {
-   
     this.MonoSynth.oscillator.type = e.value;
 
     this.setState({
@@ -121,7 +119,6 @@ export class MonoSynth extends Component {
   };
 
   handleFilterType = e => {
-  
     this.MonoSynth.filter.type = e.value;
 
     this.setState({
@@ -245,8 +242,6 @@ export class MonoSynth extends Component {
   };
 
   onKeyLifted = e => {
-  
-
     this.MonoSynth.triggerRelease();
     this.setState({ firstPressed: !this.state.firstPressed });
   };
@@ -264,63 +259,53 @@ export class MonoSynth extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify(synthFromState)
-    })
-      .then(res => res.json())
-   
+    }).then(res => res.json());
   };
 
   removeSynth = () => {
-    this.props.removeSynth(this.props.synthApi.id)
+    this.props.removeSynth(this.props.synthApi.id);
 
-    fetch('/session_instruments/')
-    .then(response => response.json())
-    .then(sessionInstrumentData => {
-      let thisSI = sessionInstrumentData.data.filter(
-        
-            si => si.attributes.instrument_id === this.props.synthApi.id
-          );
-          thisSI.map(instrument => { 
-             fetch(`/session_instruments/${instrument.id}`, {
-        method: 'delete'
-    })
-    .then(res => {
-      fetch(`/instruments/${this.props.synthApi.id}`, {
-        method: 'delete'
-    })
-   
-      })
-      return null
-          })
-    });
-   
-};
-
+    fetch("/session_instruments/")
+      .then(response => response.json())
+      .then(sessionInstrumentData => {
+        let thisSI = sessionInstrumentData.data.filter(
+          si => si.attributes.instrument_id === this.props.synthApi.id
+        );
+        thisSI.map(instrument => {
+          fetch(`/session_instruments/${instrument.id}`, {
+            method: "delete"
+          }).then(res => {
+            fetch(`/instruments/${this.props.synthApi.id}`, {
+              method: "delete"
+            });
+          });
+          return null;
+        });
+      });
+  };
 
   render() {
     return (
-      <div>
-        {this.state.instrumentNameToggle ? (
-          <div className="synth-title">
-             <EditInstrumentForm
-              updateInstrumentName={this.updateInstrumentName}
-              instrumentNameToggle={this.instrumentNameToggle}
-              name={this.state.synthName}
-            />
-          </div>
-        ) : (
-          <div onClick={this.instrumentNameToggle} className="synth-title">
-            {this.state.synthName}
-          </div>
-        )}
+      <div className="synth">
+        <div className="synth-meta">
+          {this.state.instrumentNameToggle ? (
+            <div className="synth-title">
+              <EditInstrumentForm
+                updateInstrumentName={this.updateInstrumentName}
+                instrumentNameToggle={this.instrumentNameToggle}
+                name={this.state.synthName}
+              />
+            </div>
+          ) : (
+            <div onClick={this.instrumentNameToggle} className="synth-title">
+              {this.state.synthName}
+            </div>
+          )}
 
-        <span
-          className="remove-synth"
-          onClick={this.removeSynth}
-        >
-          Delete
-        </span>
-
-
+          <span className="remove-synth" onClick={this.removeSynth}>
+            Delete
+          </span>
+        </div>
 
         <div
           className="mono-synth"
@@ -333,30 +318,32 @@ export class MonoSynth extends Component {
             <Dial value="0.4" onChange={this.handleGain} />
           </TitleAndChildren>
 
-          <TitleAndChildren title="Oscillator">
-            <Select
-              options={["sine", "square", "sawtooth", "triangle"]}
-              value={"sine"}
-              onChange={this.handleOscType}
-            />
-          </TitleAndChildren>
+          <div>
+            <TitleAndChildren title="Oscillator">
+              <Select
+                options={["sine", "square", "sawtooth", "triangle"]}
+                value={"sine"}
+                onChange={this.handleOscType}
+              />
+            </TitleAndChildren>
 
-          <TitleAndChildren title="Filter">
-            <Select
-              options={[
-                "lowpass",
-                "highpass",
-                "bandpass",
-                "lowshelf",
-                "highshelf",
-                "peaking",
-                "notch",
-                "allpass"
-              ]}
-              value={"lowpass"}
-              onChange={this.handleFilterType}
-            />
-          </TitleAndChildren>
+            <TitleAndChildren title="Filter">
+              <Select
+                options={[
+                  "lowpass",
+                  "highpass",
+                  "bandpass",
+                  "lowshelf",
+                  "highshelf",
+                  "peaking",
+                  "notch",
+                  "allpass"
+                ]}
+                value={"lowpass"}
+                onChange={this.handleFilterType}
+              />
+            </TitleAndChildren>
+          </div>
 
           <TitleAndChildren title="ADSR">
             <Multislider

@@ -1,7 +1,8 @@
 import React from "react";
-import DuoSynth from "../components/instruments/DuoSynth";
-import MonoSynth from "../components/instruments/MonoSynth";
-import FMSynth from "../components/instruments/FMSynth";
+import DuoSynth from "../components/Instruments/DuoSynth";
+import MonoSynth from "../components/Instruments/MonoSynth";
+import FMSynth from "../components/Instruments/FMSynth";
+import AMSynth from "../components/Instruments/AMSynth";
 import NewInstrumentForm from "../components/NewInstrumentForm";
 import EditSessionForm from "../components/EditSessionForm";
 
@@ -95,6 +96,14 @@ class Session extends React.Component {
         case "FMSynth":
           return (
             <FMSynth
+              key={instrument.id}
+              synthApi={instrument}
+              removeSynth={this.removeSynth}
+            />
+          );
+          case "AMSynth":
+          return (
+            <AMSynth
               key={instrument.id}
               synthApi={instrument}
               removeSynth={this.removeSynth}
